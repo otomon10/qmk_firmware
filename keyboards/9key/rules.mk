@@ -9,7 +9,8 @@ MCU = atmega32u4
 #   QMK DFU      qmk-dfu
 #   ATmega32A    bootloadHID
 #   ATmega328P   USBasp
-BOOTLOADER = caterina
+#BOOTLOADER = caterina
+BOOTLOADER = atmel-dfu
 
 # Build Options
 #   change to "no" to disable the options, or define them in the Makefile in
@@ -26,9 +27,11 @@ MIDI_ENABLE = no            # MIDI controls
 AUDIO_ENABLE = no           # Audio output on port C6
 UNICODE_ENABLE = yes         # Unicode
 BLUETOOTH_ENABLE = no       # Enable Bluetooth with the Adafruit EZ-Key HID
-RGBLIGHT_ENABLE = no        # Enable WS2812 RGB underlight.
+RGBLIGHT_ENABLE = yes        # Enable WS2812 RGB underlight.
 API_SYSEX_ENABLE = yes
 TAP_DANCE_ENABLE = no
 
 # Do not enable SLEEP_LED_ENABLE. it uses the same timer as BACKLIGHT_ENABLE
 SLEEP_LED_ENABLE = no    # Breathing sleep LED during USB suspend
+
+SPLIT_KEYBOARD = yes

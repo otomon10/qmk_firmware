@@ -12,9 +12,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------'
  */
 [0] = LAYOUT( \
-  KC_1,       KC_2,      KC_3,       \
-  KC_4,       KC_5,      KC_6,       \
-  KC_7,       KC_8,      LT(1, KC_9) \
+// Left
+        KC_1,      KC_2,       \
+        KC_3,      LT(1, KC_4),       \
+        RGB_TOG,   LT(2, KC_6), \
+// Right
+        KC_1,      KC_2,       \
+        KC_3,      LT(1, KC_4),       \
+        RGB_TOG,   LT(2, KC_6) \
 ),
 
 /* LAYER 1
@@ -27,9 +32,26 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------'
  */
 [1] = LAYOUT( \
-  KC_ESC,   KC_PLUS, KC_MINS, \
-  KC_ENTER, KC_ASTR, KC_SLSH, \
-  KC_0,     KC_DOT,  KC_TRNS  \
+// Left
+    RGB_M_B, RGB_M_R, \
+    RGB_M_SW, KC_TRNS, \
+    RGB_M_K,  RGB_M_SN,  \
+// Right
+    RGB_M_B, RGB_M_R, \
+    RGB_M_SW, KC_TRNS, \
+    RGB_M_K,  RGB_M_SN  \
+),
+
+/* LAYER 2 */
+[2] = LAYOUT( \
+// Left
+    RGB_M_X, RGB_M_G, \
+    RGB_M_T, RGB_VAI, \
+    RGB_VAD,  KC_TRNS,  \
+// Right
+    RGB_M_X, RGB_M_G, \
+    RGB_M_T, RGB_VAI, \
+    RGB_VAD,  KC_TRNS  \
 )
 
 };
