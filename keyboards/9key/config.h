@@ -44,7 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLED_NUM 57    // Number of LEDs
 //#define RGBLIGHT_ANIMATIONS
 #define RGBLIGHT_LIMIT_VAL 100 // For current limitation
-#define RGBLIGHT_LAYERS
+
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 

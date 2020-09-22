@@ -5,8 +5,8 @@
 
 enum layer_names {
     _BASE,
-    _NUMS,
     _MOUSE,
+    _NUMS,
     _MISC
 };
 
@@ -92,11 +92,6 @@ void keyboard_post_init_user(void) {
     //debug_mouse=true;
 }
 
-bool led_update_user(led_t led_state) {
-    rgblight_set_layer_state(0, led_state.caps_lock);
-    return true;
-}
-
 #define MOUSE_CNT_MAX 100
 #define MOUSE_MOVE_CNT 5
 #define MOUSE_SPEED_SHIFT_DEFAULT 1
@@ -169,14 +164,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
         }
-    case KC_ENTER:  // ←エンターキー押下で、緑に光る。
-        if (record->event.pressed) {
-            rgblight_sethsv_noeeprom_green();
-        }
-        else {
-            rgblight_init();
-        }
-        return true;
     }
     return true;
 }
@@ -184,16 +171,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 uint32_t layer_state_set_user(uint32_t state) {
     switch (biton32(state)) {
     case _BASE:
-        rgblight_setrgb (RGBLIGHT_LIMIT_VAL,  RGBLIGHT_LIMIT_VAL, RGBLIGHT_LIMIT_VAL);
+        rgblight_sethsv_noeeprom(HSV_WHITE);
         break;
     case _NUMS:
-        rgblight_setrgb (0x00,  0x00, RGBLIGHT_LIMIT_VAL);
+        rgblight_sethsv_noeeprom(HSV_ORANGE);
         break;
     case _MOUSE:
-        rgblight_setrgb (0x00,  RGBLIGHT_LIMIT_VAL, 0x00);
+        rgblight_sethsv_noeeprom(HSV_MAGENTA);
         break;
     case _MISC:
-        rgblight_setrgb (RGBLIGHT_LIMIT_VAL,  0x00, 0x00);
+        rgblight_sethsv_noeeprom(HSV_CHARTREUSE);
         break;
     }
   return state;
