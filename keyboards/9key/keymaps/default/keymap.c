@@ -155,6 +155,7 @@ void keyboard_post_init_user(void) {
 uint8_t mouse_move_cnt;
 int8_t mouse_stop_cnt;
 uint8_t mouse_slow = MOUSE_SPEED_SHIFT_DEFAULT;
+bool kc_mouse_pushed = false;
 
 #define AESC_ENABLE_TIME 50
 bool tg_aesc_enable;
@@ -166,9 +167,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         {
             if(record->event.pressed) {
                 // keep moving
-                mouse_stop_cnt = -1;
+                kc_mouse_pushed = true;
+                mouse_stop_cnt = 0;
             } else {
                 // stop moving
+                kc_mouse_pushed = false;
                 mouse_stop_cnt = MOUSE_CNT_MAX;
             }
             break;
@@ -296,7 +299,7 @@ void matrix_scan_user(void) {
             }
         } else {
             mouse_move_cnt = 0;
-            if (mouse_stop_cnt != -1) {
+            if (!kc_mouse_pushed) {
                 if(mouse_stop_cnt < MOUSE_CNT_MAX) mouse_stop_cnt++;
             }
         }
