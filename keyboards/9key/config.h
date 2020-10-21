@@ -24,9 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define VENDOR_ID       0xFEED
 #define PRODUCT_ID      0x0007
 #define DEVICE_VER 		0x0001
-#define MANUFACTURER    Bishop Keyboards
-#define PRODUCT         9Key
-#define DESCRIPTION     Bishop Keyboards 9Key // Charleston, SC Meetup Handout
+#define MANUFACTURER    otomon
+#define PRODUCT         dactyl
+#define DESCRIPTION     dactyl lightcycle // Charleston, SC Meetup Handout
 
 /* key matrix size */
 #define MATRIX_ROWS 8   // Split setting Left:4 Right:4
