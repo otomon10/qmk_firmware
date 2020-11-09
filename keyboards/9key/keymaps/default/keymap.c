@@ -78,7 +78,9 @@ enum my_keycodes {
 	MS_WH_D,
 	MS_WH_L,
 	MS_WH_R,
-	MY_TAG
+	MY_TAG,
+    MY_SPACE_FN,
+    MY_UNTAG_MS
 };
 
 #define KC_MOUSE    MO(_MOUSE)
@@ -90,13 +92,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_BASE] = LAYOUT( \
 	// Left
 	KC_ESC,	        KC_Q,	    	KC_W,	    KC_E,	    KC_R,	    KC_T,	                XXXXXXX,  	    XXXXXXX,        \
-	KC_TAB,         KC_A,	    	KC_S,	    KC_D,	    KC_F,   	KC_G,	                KC_BSPACE,	    C(KC_SPACE),    \
+	KC_TAB,         KC_A,	    	KC_S,	    KC_D,	    KC_F,   	KC_G,	                KC_BSPACE,	    MY_SPACE_FN,    \
 	KC_LSHIFT,	    KC_Z,	    	KC_X,	    KC_C,	    KC_V,   	KC_B,	                XXXXXXX,  	    TD(CT_ALT),     \
-	KC_FN_MISC,     KC_LGUI,        KC_GRV,     C(KC_TAB), 	TG_AESC, 	            KC_SPACE,   KC_LSHIFT, 		TD(CT_CTRL),     \
+	RALT(KC_F7),     KC_LGUI,        KC_GRV,     C(KC_TAB), 	TG_AESC, 	            KC_SPACE,   KC_LSHIFT, 		TD(CT_CTRL),     \
 	// Right
 	XXXXXXX,        XXXXXXX,                	KC_Y,   	KC_U,	    KC_I,	    KC_O,	    KC_P,	        KC_BSLASH,	\
 	MY_TAG,			KC_DELETE,          	    KC_H,   	KC_J,	    KC_K,   	KC_L,	    KC_SCOLON,	    KC_QUOTE,	\
-	KC_MOUSE,   	XXXXXXX,  	                KC_N,   	KC_M,	    KC_COMMA,	KC_DOT, 	KC_SLASH,	    KC_RSHIFT,	\
+	MY_UNTAG_MS,   	XXXXXXX,  	                KC_N,   	KC_M,	    KC_COMMA,	KC_DOT, 	KC_SLASH,	    KC_RSHIFT,	\
 	XXXXXXX,        KC_NUMS,  	KC_ENTER,	                KC_LEFT,	KC_DOWN,	KC_UP,	    KC_RIGHT,	    KC_FN_MISC   \
 
 ),
@@ -178,9 +180,17 @@ uint8_t ms_wh_d_thresold = MOUSE_SPEED_SHIFT_DEFAULT;
 uint8_t ms_wh_l_thresold = MOUSE_SPEED_SHIFT_DEFAULT;
 uint8_t ms_wh_r_thresold = MOUSE_SPEED_SHIFT_DEFAULT;
 
-#define AESC_ENABLE_TIME 30
+#define AESC_ENABLE_TIME 40
 bool tg_aesc_enable;
 uint8_t tg_aesc_cnt;
+
+#define ENABLE_HOLD_TIME 200
+bool is_cspace_fn_active = false;
+uint16_t cspace_fn_timer = 0;
+bool is_my_tag_active = false;
+uint16_t my_tag_timer = 0;
+bool is_my_untag_ms_active = false;
+uint16_t my_untag_ms_timer = 0;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	switch (keycode) {
@@ -333,20 +343,54 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 		case MY_TAG:
 		{
             if(record->event.pressed) {
-                if (is_shitft_pressed) {
-				    unregister_code(KC_LSHIFT);
-				    unregister_code(KC_RSHIFT);
-					register_code(KC_LALT);
-					register_code(KC_LCTRL);
-					register_code(KC_MINS);
-                } else {
-					register_code(KC_F12);
-                }
+                is_my_tag_active = true;
+                my_tag_timer = timer_read();
             } else {
-					unregister_code(KC_LALT);
-					unregister_code(KC_LCTRL);
-					unregister_code(KC_MINS);
-					unregister_code(KC_F12);
+                if (timer_elapsed(my_tag_timer) <= ENABLE_HOLD_TIME) {
+                    register_code(KC_F12);
+                    unregister_code(KC_F12);
+                }
+			    layer_off(_FN_MISC);
+                is_my_tag_active = false;
+            }
+            return false;
+		}
+		case MY_SPACE_FN:
+		{
+            if(record->event.pressed) {
+                is_cspace_fn_active = true;
+                cspace_fn_timer = timer_read();
+            } else {
+                if (timer_elapsed(cspace_fn_timer) <= ENABLE_HOLD_TIME) {
+                    register_code(KC_LCTRL);
+                    register_code(KC_SPACE);
+                    unregister_code(KC_LCTRL);
+                    unregister_code(KC_SPACE);
+                }
+			    layer_off(_FN_MISC);
+                is_cspace_fn_active = false;
+            }
+            return false;
+		}
+		case MY_UNTAG_MS:
+		{
+            if(record->event.pressed) {
+                is_my_untag_ms_active = true;
+                my_untag_ms_timer = timer_read();
+            } else {
+                if (timer_elapsed(my_untag_ms_timer) <= ENABLE_HOLD_TIME) {
+                    register_code(KC_LALT);
+                    register_code(KC_LCTRL);
+                    register_code(KC_MINS);
+                    unregister_code(KC_LALT);
+                    unregister_code(KC_LCTRL);
+                    unregister_code(KC_MINS);
+                }
+			    layer_off(_MOUSE);
+                is_my_untag_ms_active = false;
+				// stop moving
+				kc_mouse_pushed = false;
+				mouse_stop_cnt = MOUSE_CNT_MAX;
             }
             return false;
 		}
@@ -470,6 +514,26 @@ void matrix_scan_user(void) {
 	}
 	pointing_device_set_report(mouse_rep);
 
+    if(is_cspace_fn_active) {
+        if (timer_elapsed(cspace_fn_timer) > ENABLE_HOLD_TIME) {
+			layer_on(_FN_MISC);
+            is_cspace_fn_active = false;
+        }
+    }
+    if(is_my_tag_active) {
+        if (timer_elapsed(my_tag_timer) > ENABLE_HOLD_TIME) {
+			layer_on(_FN_MISC);
+            is_my_tag_active = false;
+        }
+    }
+    if(is_my_untag_ms_active) {
+        if (timer_elapsed(my_untag_ms_timer) > ENABLE_HOLD_TIME) {
+			layer_on(_MOUSE);
+            is_my_untag_ms_active = false;
+            // keep moving
+            kc_mouse_pushed = true;
+            mouse_stop_cnt = 0;
+        }
+    }
+
 }
-
-
