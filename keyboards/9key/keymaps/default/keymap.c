@@ -99,7 +99,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	XXXXXXX,        XXXXXXX,                	KC_Y,   	KC_U,	    KC_I,	    KC_O,	    KC_P,	        KC_BSLASH,	\
 	MY_TAG,			KC_DELETE,          	    KC_H,   	KC_J,	    KC_K,   	KC_L,	    KC_SCOLON,	    KC_QUOTE,	\
 	MY_UNTAG_MS,   	XXXXXXX,  	                KC_N,   	KC_M,	    KC_COMMA,	KC_DOT, 	KC_SLASH,	    KC_RSHIFT,	\
-	XXXXXXX,        KC_NUMS,  	KC_ENTER,	                KC_LEFT,	KC_DOWN,	KC_UP,	    KC_RIGHT,	    KC_FN_MISC   \
+	XXXXXXX,        KC_NUMS,  	KC_ENTER,	                KC_LEFT,	KC_DOWN,	KC_UP,	    KC_RIGHT,	    RALT(KC_F8)   \
 
 ),
 
@@ -132,13 +132,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_FN_MISC] = LAYOUT( \
 	// Left
 	_______,  	_______,	_______,	 _______,	 _______,	_______,	            XXXXXXX,  XXXXXXX, \
-	KC_F11,	    KC_F1,	    KC_F2,  	KC_F3,  	KC_F4,  	KC_F5,	    			_______,	_______, \
-	_______,	_______ ,	_______,	_______,	_______,	_______,				XXXXXXX,	_______, \
-	RGB_TOG,	KC_LEFT,	KC_DOWN,	KC_UP,	KC_RIGHT,				KC_ENTER,	_______,	_______, \
+	KC_F11,	    KC_F1,	    KC_F2,  	KC_F3,  	KC_F4,  	KC_F5,	    			DM_PLY2,	DM_RSTP, \
+	_______,	_______ ,	_______,	_______,	_______,	_______,				XXXXXXX,	DM_REC2, \
+	RGB_TOG,	KC_LEFT,	KC_DOWN,	KC_UP,	    KC_RIGHT,				KC_ENTER,	_______,	_______, \
 	// Right
 	XXXXXXX,	XXXXXXX,				_______,    _______,   	_______,    _______,   	_______,   	_______, \
-	_______,	_______,				KC_F6,	    KC_F7,  	KC_F8,  	KC_F9,  	KC_F10, 	KC_F12, \
-	_______,	XXXXXXX,				_______,	_______,	_______,	_______,	_______,	_______, \
+	DM_RSTP,	DM_PLY1,				KC_F6,	    KC_F7,  	KC_F8,  	KC_F9,  	KC_F10, 	KC_F12, \
+	DM_REC1,	XXXXXXX,				_______,	_______,	_______,	_______,	_______,	_______, \
 	XXXXXXX,	_______,	_______,				KC_PSCR,	KC_INS,	    _______,	_______,	_______ \
 ),
 
