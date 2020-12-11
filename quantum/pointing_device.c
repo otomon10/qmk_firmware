@@ -35,10 +35,10 @@ void pointing_device_send(void){
     //If you need to do other things, like debugging, this is the place to do it.
     host_mouse_send(&mouseReport);
 	//send it and 0 it out except for buttons, so those stay until they are explicity over-ridden using update_pointing_device
-	mouseReport.x = 0;
-	mouseReport.y = 0;
-	mouseReport.v = 0;
-	mouseReport.h = 0;
+	//mouseReport.x = 0;
+	//mouseReport.y = 0;
+	//mouseReport.v = 0;
+	//mouseReport.h = 0;
 }
 
 __attribute__ ((weak))
