@@ -16,6 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "trackball.h"
+
 #include "app_ble_func.h"
 #include "keymap_def.h"
 #include "paw3204.h"
@@ -114,3 +115,7 @@ void disable_trackball_force_move() {
     g_force_move = false;
     g_force_stop = true;
 }
+
+void disable_trackball_force_move_with_delay() { g_force_move = false; }
+
+void trackball_continue_moving() { g_stop_cnt = 0; }

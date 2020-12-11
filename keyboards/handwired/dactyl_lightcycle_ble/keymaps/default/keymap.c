@@ -19,8 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include QMK_KEYBOARD_H
 #include "app_ble_func.h"
 #include "keymap_def.h"
-#include "trackball.h"
 #include "pointing_device.h"
+#include "trackball.h"
 
 /* Aliases */
 #define C(kc) LCTL(kc)
@@ -305,7 +305,6 @@ bool process_record_user_ble(uint16_t keycode, keyrecord_t *record) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-
     /* dynamic macros */
     if (!process_record_dynamic_macro(keycode, record)) {
         return false;
@@ -320,6 +319,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     /* custom */
     switch (keycode) {
+        case KC_WH_U:
+        case KC_WH_D:
+        case KC_WH_L:
+        case KC_WH_R: {
+            if (record->event.pressed) {
+                enable_trackball_force_move();
+            } else {
+                disable_trackball_force_move_with_delay();
+            }
+            trackball_continue_moving();
+            break;
+        }
         case MS_LBTN:
         case MS_RBTN:
         case MS_CBTN: {
@@ -328,10 +339,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             uint8_t btn = 1 << (keycode - MS_LBTN);
             if (record->event.pressed) {
                 report.buttons |= btn;
+                enable_trackball_force_move();
             } else {
                 report.buttons &= ~btn;
+                disable_trackball_force_move_with_delay();
             }
             pointing_device_set_report(report);
+            trackball_continue_moving();
             return false;
         }
         case MS_SLOW: {
