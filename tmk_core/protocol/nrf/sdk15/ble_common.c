@@ -14,6 +14,10 @@
 #include "pin_assign.h"
 #endif
 
+/* sleep led off */
+#include "rgblight.h"
+#include "wait.h"
+
 uint8_t keyboard_idle __attribute__((aligned(2))) = 0;
 uint8_t keyboard_protocol __attribute__((aligned(2))) = 1;
 uint16_t keyboard_led_stats __attribute__((aligned(2))) = 0;
@@ -134,6 +138,10 @@ void sleep_mode_enter(void) {
     nrf_gpio_cfg_sense_input(col_pins[i], NRF_GPIO_PIN_PULLUP, NRF_GPIO_PIN_SENSE_LOW);
   }
 #endif
+
+  /* sleep led off */
+  rgblight_disable_noeeprom();
+  nrf_delay_ms(10); // need this
 
   sd_power_system_off();
 }
