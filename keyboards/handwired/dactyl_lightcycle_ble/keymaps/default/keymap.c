@@ -69,7 +69,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MS_WH_SPEEDUP_INTERVAL 20
 
 /* Alt + ESC */
-#define AESC_ENABLE_TIME 40
+#define AESC_ENABLE_TIME 30
 
 /* layer change hold time */
 #define ENABLE_HOLD_TIME 200
@@ -511,6 +511,9 @@ void matrix_scan_user_master(void) {
         if (tg_aesc_cnt > AESC_ENABLE_TIME) {
             tg_aesc_enable = false;
             unregister_code(KC_RALT);
+        }
+        if (is_shitft_pressed) {
+            tg_aesc_cnt = 0;
         }
     }
     if (is_cspace_fn_active) {
