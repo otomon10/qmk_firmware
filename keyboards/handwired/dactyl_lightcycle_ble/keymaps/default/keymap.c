@@ -306,6 +306,11 @@ bool process_record_user_ble(uint16_t keycode, keyrecord_t *record) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
+    /* dynamic macros */
+    if (!process_record_dynamic_macro(keycode, record)) {
+        return false;
+    }
+
     /* FIXME: In BLE pro micro, if there are different keycodes after a layer
      * change, the released event may not occur. */
 
