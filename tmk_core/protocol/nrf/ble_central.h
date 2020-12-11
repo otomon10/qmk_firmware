@@ -18,3 +18,4 @@
 void nus_c_init(void);
 void db_discovery_init(void);
 void on_ble_central_evt(const ble_evt_t * const p_ble_evt, uint16_t conn_handle);
+uint32_t ble_nus_send_bytes_to_slave(uint8_t* buf, uint16_t len);

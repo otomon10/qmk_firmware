@@ -394,6 +394,10 @@ void peer_manager_init() {
  */
 /**@snippet [Handling the data received over BLE] */
 static void nus_data_handler(ble_nus_evt_t * p_evt) {
+  if (p_evt->type == BLE_NUS_EVT_RX_DATA)
+  {
+      ble_nus_recv_bytes((uint8_t*)p_evt->params.rx_data.p_data, (uint16_t)p_evt->params.rx_data.length);
+  }
 }
 /**@snippet [Handling the data received over BLE] */
 

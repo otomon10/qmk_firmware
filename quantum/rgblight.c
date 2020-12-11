@@ -52,6 +52,7 @@ __attribute__ ((weak))
 const uint16_t RGBLED_RGBTEST_INTERVALS[] PROGMEM = {1024};
 
 rgblight_config_t rgblight_config;
+rgblight_status_t rgblight_status;
 
 LED_TYPE led[RGBLED_NUM];
 bool rgblight_timer_enabled = false;
@@ -308,12 +309,20 @@ void rgblight_enable(void) {
   // No need to update EEPROM here. rgblight_mode() will do that, actually
   //eeconfig_update_rgblight(rgblight_config.raw);
   xprintf("rgblight enable [EEPROM]: rgblight_config.enable = %u\n", rgblight_config.enable);
+
+  /* enable led */
+  rgblight_status.change_flags |= RGBLIGHT_STATUS_CHANGE_MODE;
+
   rgblight_mode(rgblight_config.mode);
 }
 
 void rgblight_enable_noeeprom(void) {
   rgblight_config.enable = 1;
   xprintf("rgblight enable [NOEEPROM]: rgblight_config.enable = %u\n", rgblight_config.enable);
+
+  /* enable led */
+  rgblight_status.change_flags |= RGBLIGHT_STATUS_CHANGE_MODE;
+
   rgblight_mode_noeeprom(rgblight_config.mode);
 }
 
@@ -324,6 +333,10 @@ void rgblight_disable(void) {
   #ifdef RGBLIGHT_ANIMATIONS
     rgblight_timer_disable();
   #endif
+
+  /* disable led */
+  rgblight_status.change_flags |= RGBLIGHT_STATUS_CHANGE_MODE;
+
   wait_ms(50);
   rgblight_set();
 }
@@ -334,6 +347,10 @@ void rgblight_disable_noeeprom(void) {
   #ifdef RGBLIGHT_ANIMATIONS
     rgblight_timer_disable();
   #endif
+
+  /* disable led */
+  rgblight_status.change_flags |= RGBLIGHT_STATUS_CHANGE_MODE;
+
   wait_ms(50);
   rgblight_set();
 }
@@ -448,6 +465,10 @@ void rgblight_sethsv_eeprom_helper(uint16_t hue, uint8_t sat, uint8_t val, bool 
         }
         rgblight_set();
       }
+    }
+    /* update change flags */
+    if (rgblight_config.hue != hue || rgblight_config.sat != sat || rgblight_config.val != val) {
+        rgblight_status.change_flags |= RGBLIGHT_STATUS_CHANGE_HSVS;
     }
     rgblight_config.hue = hue;
     rgblight_config.sat = sat;
@@ -799,5 +820,30 @@ void rgblight_effect_alternating(void){
   rgblight_set();
   pos = (pos + 1) % 2;
 }
-
 #endif /* RGBLIGHT_ANIMATIONS */
+
+uint8_t rgblight_get_change_flags(void) {
+  return rgblight_status.change_flags;
+}
+
+void rgblight_clear_change_flags(void) {
+  rgblight_status.change_flags = 0;
+}
+
+void rgblight_get_syncinfo(rgblight_syncinfo_t *syncinfo) {
+  syncinfo->config = rgblight_config;
+  syncinfo->status = rgblight_status;
+}
+
+void rgblight_update_sync(rgblight_syncinfo_t *syncinfo, bool write_to_eeprom) {
+  if (syncinfo->status.change_flags & RGBLIGHT_STATUS_CHANGE_MODE) {
+    if (syncinfo->config.enable) {
+      rgblight_enable_noeeprom();
+    } else {
+      rgblight_disable_noeeprom();
+    }
+  }
+  if (syncinfo->status.change_flags & RGBLIGHT_STATUS_CHANGE_HSVS) {
+    rgblight_sethsv_noeeprom(syncinfo->config.hue, syncinfo->config.sat, syncinfo->config.val);
+  }
+}

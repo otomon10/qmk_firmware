@@ -168,4 +168,27 @@ void rgblight_effect_christmas(void);
 void rgblight_effect_rgbtest(void);
 void rgblight_effect_alternating(void);
 
+
+/* RGBLED sync */
+#define RGBLIGHT_STATUS_CHANGE_MODE (1 << 0)
+#define RGBLIGHT_STATUS_CHANGE_HSVS (1 << 1)
+#define RGBLIGHT_STATUS_CHANGE_TIMER (1 << 2)
+#define RGBLIGHT_STATUS_ANIMATION_TICK (1 << 3)
+
+typedef struct _rgblight_status_t {
+  uint8_t change_flags;
+} rgblight_status_t;
+
+typedef struct _rgblight_syncinfo_t {
+  rgblight_config_t config;
+  rgblight_status_t status;
+} rgblight_syncinfo_t;
+
+/* for split keyboard master side */
+uint8_t rgblight_get_change_flags(void);
+void rgblight_clear_change_flags(void);
+void rgblight_get_syncinfo(rgblight_syncinfo_t *syncinfo);
+/* for split keyboard slave side */
+void rgblight_update_sync(rgblight_syncinfo_t *syncinfo, bool write_to_eeprom);
+
 #endif
