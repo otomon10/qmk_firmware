@@ -1420,6 +1420,7 @@ void select_usb() {
   enable_usb_send = true;
 }
 
+#ifdef NRF_SEPARATE_KEYBOARD_MASTER
 pm_peer_id_t get_peer_id() { return m_peer_id; }
 
 uint32_t get_peer_cnt() {
@@ -1429,6 +1430,7 @@ uint32_t get_peer_cnt() {
   peer_list_get(m_whitelist_peers, &m_whitelist_peer_cnt);
   return m_whitelist_peer_cnt;
 }
+#endif
 
 /**
  * @}

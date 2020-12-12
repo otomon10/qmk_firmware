@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "ble.h"
+#include "ble_helper.h"
 
 #include "app_ble_func.h"
 #include "keymap_def.h"

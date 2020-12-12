@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include QMK_KEYBOARD_H
 #include "app_ble_func.h"
-#include "ble.h"
+#include "ble_helper.h"
 #include "keymap_def.h"
 #include "pointing_device.h"
 #include "trackball.h"

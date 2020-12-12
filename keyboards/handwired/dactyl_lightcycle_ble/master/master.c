@@ -1,5 +1,5 @@
 #include "app_ble_func.h"
-#include "keymaps/default/ble.h"
+#include "keymaps/default/ble_helper.h"
 #include "keymaps/default/paw3204.h"
 #include "matrix.h"
 #include "rgblight.h"

@@ -58,8 +58,10 @@ bool get_usb_enabled();
 void set_usb_enabled(bool enabled);
 void select_ble();
 void select_usb();
+#ifdef NRF_SEPARATE_KEYBOARD_MASTER
 pm_peer_id_t get_peer_id();
 uint32_t get_peer_cnt();
+#endif
 #endif
 
 #endif /* TMK_CORE_PROTOCOL_NRF_APP_BLE_FUNC_H_ */
