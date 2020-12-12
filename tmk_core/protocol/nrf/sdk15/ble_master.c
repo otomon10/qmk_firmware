@@ -173,7 +173,7 @@ BLE_ADVERTISING_DEF( m_advertising); /**< Advertising module instance. */
 
 static bool m_in_boot_mode = false; /**< Current protocol mode. */
 static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID; /**< Handle of the current connection. */
-static pm_peer_id_t m_peer_id; /**< Device reference handle to the current bonded central. */
+static pm_peer_id_t m_peer_id = PM_PEER_ID_INVALID; /**< Device reference handle to the current bonded central. */
 static uint32_t m_whitelist_peer_cnt; /**< Number of peers currently in the whitelist. */
 static pm_peer_id_t m_whitelist_peers[BLE_GAP_WHITELIST_ADDR_MAX_COUNT]; /**< List of peers currently in the whitelist. */
 
@@ -1373,17 +1373,13 @@ void restart_advertising_id(uint8_t id) {
   m_whitelist_peer_cnt = (sizeof(m_whitelist_peers) / sizeof(pm_peer_id_t));
 
   peer_list_get(m_whitelist_peers, &m_whitelist_peer_cnt);
-  if (id > m_whitelist_peer_cnt) {
+  if (id + 1 > m_whitelist_peer_cnt) {
     NRF_LOG_INFO("no peer registered(id = %d, whitelist_peer_cnt=%d)", id, m_whitelist_peer_cnt);
     return;
   }
 #ifdef NRF_SEPARATE_KEYBOARD_MASTER
-  if (id == 0) {
-    NRF_LOG_INFO("id 0 is reserved for the slave");
-    return;
-  }
   m_whitelist_peer_cnt = 1;
-  m_whitelist_peers[0] = m_whitelist_peers[id-1];
+  m_whitelist_peers[0] = m_whitelist_peers[id];
   NRF_LOG_DEBUG("whitelist pears[0]: %d", m_whitelist_peers[0]);
 #else
   m_whitelist_peer_cnt = 1;
@@ -1423,6 +1419,17 @@ void select_usb() {
   enable_ble_send = false;
   enable_usb_send = true;
 }
+
+pm_peer_id_t get_peer_id() { return m_peer_id; }
+
+uint32_t get_peer_cnt() {
+  memset(m_whitelist_peers, PM_PEER_ID_INVALID, sizeof(m_whitelist_peers));
+  m_whitelist_peer_cnt = (sizeof(m_whitelist_peers) / sizeof(pm_peer_id_t));
+
+  peer_list_get(m_whitelist_peers, &m_whitelist_peer_cnt);
+  return m_whitelist_peer_cnt;
+}
+
 /**
  * @}
  */

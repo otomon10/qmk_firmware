@@ -1,4 +1,5 @@
 #include "app_ble_func.h"
+#include "keymaps/default/ble.h"
 #include "keymaps/default/paw3204.h"
 #include "matrix.h"
 #include "rgblight.h"
@@ -15,6 +16,7 @@ void matrix_init_user(void) {
 void matrix_scan_user(void) {
     static int cnt;
     static bool init_rgblight = false;
+    static bool init_ble_connect = false;
 
     /* init rgblight did not work well in keyboard_post_init_user(), so do it
      * here */
@@ -23,6 +25,15 @@ void matrix_scan_user(void) {
         nrf_delay_ms(10);  // need this
         rgblight_sethsv_noeeprom(0, 0, RGBLIGHT_LIMIT_VAL);
         init_rgblight = true;
+    }
+
+    if (!init_ble_connect) {
+        bool enable_usb = has_usb();
+        if (!enable_usb) {
+            /* automatic connect ble peer id 0 */
+            ble_connect_id(0);
+        }
+        init_ble_connect = true;
     }
 
     /* automatic setting during USB insertion and removal */
@@ -37,6 +48,9 @@ void matrix_scan_user(void) {
             } else {
                 set_usb_enabled(false);
                 set_ble_enabled(true);
+
+                /* automatic connect ble peer id 0 */
+                ble_connect_id(0);
             }
             enable_usb_prev = enable_usb;
         }

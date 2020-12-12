@@ -2,6 +2,7 @@
 #define TMK_CORE_PROTOCOL_NRF_APP_BLE_FUNC_H_
 
 #include "nrf.h"
+#include "peer_manager.h"
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -57,6 +58,8 @@ bool get_usb_enabled();
 void set_usb_enabled(bool enabled);
 void select_ble();
 void select_usb();
+pm_peer_id_t get_peer_id();
+uint32_t get_peer_cnt();
 #endif
 
 #endif /* TMK_CORE_PROTOCOL_NRF_APP_BLE_FUNC_H_ */

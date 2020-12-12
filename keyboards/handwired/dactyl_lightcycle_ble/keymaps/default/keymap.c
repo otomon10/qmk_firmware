@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include QMK_KEYBOARD_H
 #include "app_ble_func.h"
+#include "ble.h"
 #include "keymap_def.h"
 #include "pointing_device.h"
 #include "trackball.h"
@@ -27,31 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define S(kc) LSFT(kc)
 #define A(kc) LALT(kc)
 #define G(kc) LGUI(kc)
-
-/* HSV color */
-#define HSV_OFF 0, 0, 0
-#define HSV_WHITE 0, 0, 255
-#define HSV_RED 0, 255, 255
-#define HSV_CORAL 11, 176, 255
-#define HSV_ORANGE 28, 255, 255
-#define HSV_GOLDENROD 30, 218, 218
-#define HSV_GOLD 36, 255, 255
-#define HSV_YELLOW 43, 255, 255
-#define HSV_CHARTREUSE 64, 255, 255
-#define HSV_GREEN 85, 255, 255
-#define HSV_SPRINGGREEN 106, 255, 255
-#define HSV_TURQUOISE 123, 90, 112
-#define HSV_TEAL 128, 255, 128
-#define HSV_CYAN 128, 255, 255
-#define HSV_AZURE 132, 102, 255
-#define HSV_BLUE 170, 255, 255
-#define HSV_PURPLE 191, 255, 255
-#define HSV_MAGENTA 213, 255, 255
-#define HSV_PINK 234, 128, 255
-#define HSV_OBLIVION_GREEN 89, 255, 255
-#define HSV_OBLIVION_ORANGE 27, 255, 255
-#define HSV_OBLIVION_BLUE 213, 255, 255
-#define HSV_OBLIVION_YELLOW 56, 255, 255
 
 /* dynamic macro define */
 #define KC_DRS1 DYN_REC_START1
@@ -82,23 +58,19 @@ enum custom_keycodes {
     USB_DIS,              /* Disable USB HID sending              */
     USB_EN,               /* Enable USB HID sending               */
     DELBNDS,              /* Delete all bonding                   */
-#if 0                     /* used for slave */
     ADV_ID0,              /* Start advertising to PeerID 0        */
-#endif
-    ADV_ID1, /* Start advertising to PeerID 1        */
-    ADV_ID2, /* Start advertising to PeerID 2        */
-    ADV_ID3, /* Start advertising to PeerID 3        */
-    ADV_ID4, /* Start advertising to PeerID 4        */
-    BATT_LV, /* Display battery level in milli volts */
-#if 0        /* used for slave */
-    DEL_ID0, /* Delete bonding of PeerID 0           */
-#endif
-    DEL_ID1, /* Delete bonding of PeerID 1           */
-    DEL_ID2, /* Delete bonding of PeerID 2           */
-    DEL_ID3, /* Delete bonding of PeerID 3           */
-    DEL_ID4, /* Delete bonding of PeerID 4           */
-    ENT_DFU, /* Start bootloader                     */
-    ENT_SLP, /* Deep sleep mode                      */
+    ADV_ID1,              /* Start advertising to PeerID 1        */
+    ADV_ID2,              /* Start advertising to PeerID 2        */
+    ADV_ID3,              /* Start advertising to PeerID 3        */
+    ADV_ID4,              /* Start advertising to PeerID 4        */
+    BATT_LV,              /* Display battery level in milli volts */
+    DEL_ID0,              /* Delete bonding of PeerID 0           */
+    DEL_ID1,              /* Delete bonding of PeerID 1           */
+    DEL_ID2,              /* Delete bonding of PeerID 2           */
+    DEL_ID3,              /* Delete bonding of PeerID 3           */
+    DEL_ID4,              /* Delete bonding of PeerID 4           */
+    ENT_DFU,              /* Start bootloader                     */
+    ENT_SLP,              /* Deep sleep mode                      */
     /* custom */
     MS_LBTN,
     MS_RBTN,
@@ -222,9 +194,9 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_FN_MISC] = LAYOUT( \
 	// Left
-	AD_WO_L,	ADV_ID1,	ADV_ID2,	 ADV_ID3,	ADV_ID4,	_______,				XXXXXXX,	XXXXXXX,	\
+	AD_WO_L,	ADV_ID0,	ADV_ID1,	 ADV_ID2,	ADV_ID3,	ADV_ID4,				XXXXXXX,	XXXXXXX,	\
 	KC_F11,		KC_F1,		KC_F2,  	KC_F3,		KC_F4,		KC_F5,					KC_DRS2,	_______,	\
-	RGB_TOG,	DEL_ID1 ,	DEL_ID2,	DEL_ID3,	DEL_ID4,	_______,				XXXXXXX,	KC_DRS1,	\
+	RGB_TOG,	DEL_ID0 ,	DEL_ID1,	DEL_ID2,	DEL_ID3,	DEL_ID4,				XXXXXXX,	KC_DRS1,	\
 	RGB_BASE,	KC_LEFT,	KC_DOWN,	KC_UP,		KC_RIGHT,				KC_ENTER,	_______,	KC_DRS,		\
 	// Right
 	XXXXXXX,	XXXXXXX,				BLE_DIS,	BLE_EN,	USB_DIS,	USB_EN,	BATT_LV,	DELBNDS,	\
@@ -261,28 +233,18 @@ bool process_record_user_ble(uint16_t keycode, keyrecord_t *record) {
                 set_ble_enabled(false);
                 return false;
                 break;
-#if 0 /* used for slave */
             case ADV_ID0:
-                restart_advertising_id(0);
-                return false;
-#endif
             case ADV_ID1:
-                restart_advertising_id(1);
-                return false;
             case ADV_ID2:
-                restart_advertising_id(2);
-                return false;
             case ADV_ID3:
-                restart_advertising_id(3);
+            case ADV_ID4: {
+                uint8_t id = keycode - ADV_ID0;
+                ble_connect_id(id);
                 return false;
-            case ADV_ID4:
-                restart_advertising_id(4);
-                return false;
-#if 0 /* used for slave */
+            }
             case DEL_ID0:
                 delete_bond_id(0);
                 return false;
-#endif
             case DEL_ID1:
                 delete_bond_id(1);
                 return false;
@@ -515,6 +477,7 @@ void keyboard_post_init_user(void) {
 
 void matrix_scan_user_master(void) {
     process_trackball(mouse_speed);
+    process_ble_status_rgblight();
 
     // ALT + ESC
     if (tg_aesc_enable) {
