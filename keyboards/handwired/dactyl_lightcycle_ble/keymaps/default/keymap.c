@@ -44,6 +44,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MS_WH_THRESHOLD_DEFAULT 4
 #define MS_WH_SPEEDUP_INTERVAL 20
 
+#define BLE_SLEEP_TITME (3600 * 5) /* sleep in 5 min */
+
 /* Alt + ESC */
 #define AESC_ENABLE_TIME 30
 
@@ -150,6 +152,7 @@ uint16_t my_tag_timer = 0;
 bool is_my_untag_ms_active = false;
 uint16_t my_untag_ms_timer = 0;
 bool enable_rgb_base = false;
+int sleep_cnt = 0;
 
 // clang-format off
 const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -278,6 +281,8 @@ bool process_record_user_ble(uint16_t keycode, keyrecord_t *record) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    sleep_cnt = 0;
+
     /* dynamic macros */
     if (!process_record_dynamic_macro(keycode, record)) {
         return false;
@@ -475,9 +480,25 @@ void keyboard_post_init_user(void) {
     // debug_mouse=true;
 }
 
+void procees_sleep() {
+    if (sleep_cnt > BLE_SLEEP_TITME) {
+        rgblight_sethsv_noeeprom(HSV_WHITE);
+        nrf_delay_ms(100);
+        rgblight_sethsv_noeeprom(HSV_OFF);
+        nrf_delay_ms(100);
+        rgblight_sethsv_noeeprom(HSV_WHITE);
+        nrf_delay_ms(100);
+        rgblight_sethsv_noeeprom(HSV_OFF);
+        nrf_delay_ms(100);
+        sleep_mode_enter();
+    }
+    sleep_cnt++;
+}
+
 void matrix_scan_user_master(void) {
     process_trackball(mouse_speed);
     process_ble_status_rgblight();
+    procees_sleep();
 
     // ALT + ESC
     if (tg_aesc_enable) {
