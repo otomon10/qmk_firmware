@@ -105,11 +105,13 @@ __WEAK void app_error_fault_handler(uint32_t id, uint32_t pc, uint32_t info)
 #endif // DEBUG
 }
 
+#include "wait.h"
 extern void rgblight_update_sync(rgblight_syncinfo_t *syncinfo, bool write_to_eeprom);
 
 uint32_t ble_nus_recv_bytes(uint8_t* buf, uint16_t len) {
   if (len == sizeof(rgblight_syncinfo_t)) {
     rgblight_update_sync((rgblight_syncinfo_t*)buf, false);
+    nrf_delay_ms(10); // need this
   }
   return 0;
 }
