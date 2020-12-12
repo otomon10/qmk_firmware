@@ -1373,15 +1373,18 @@ void restart_advertising_id(uint8_t id) {
   m_whitelist_peer_cnt = (sizeof(m_whitelist_peers) / sizeof(pm_peer_id_t));
 
   peer_list_get(m_whitelist_peers, &m_whitelist_peer_cnt);
-  if (id >= m_whitelist_peer_cnt) {
+  if (id > m_whitelist_peer_cnt) {
+    NRF_LOG_INFO("no peer registered(id = %d, whitelist_peer_cnt=%d)", id, m_whitelist_peer_cnt);
     return;
   }
 #ifdef NRF_SEPARATE_KEYBOARD_MASTER
   if (id == 0) {
+    NRF_LOG_INFO("id 0 is reserved for the slave");
     return;
   }
-  m_whitelist_peer_cnt = 2;
-  m_whitelist_peers[1] = m_whitelist_peers[id];
+  m_whitelist_peer_cnt = 1;
+  m_whitelist_peers[0] = m_whitelist_peers[id-1];
+  NRF_LOG_DEBUG("whitelist pears[0]: %d", m_whitelist_peers[0]);
 #else
   m_whitelist_peer_cnt = 1;
   m_whitelist_peers[0] = m_whitelist_peers[id];

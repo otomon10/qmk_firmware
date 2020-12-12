@@ -82,19 +82,23 @@ enum custom_keycodes {
     USB_DIS,              /* Disable USB HID sending              */
     USB_EN,               /* Enable USB HID sending               */
     DELBNDS,              /* Delete all bonding                   */
+#if 0                     /* used for slave */
     ADV_ID0,              /* Start advertising to PeerID 0        */
-    ADV_ID1,              /* Start advertising to PeerID 1        */
-    ADV_ID2,              /* Start advertising to PeerID 2        */
-    ADV_ID3,              /* Start advertising to PeerID 3        */
-    ADV_ID4,              /* Start advertising to PeerID 4        */
-    BATT_LV,              /* Display battery level in milli volts */
-    DEL_ID0,              /* Delete bonding of PeerID 0           */
-    DEL_ID1,              /* Delete bonding of PeerID 1           */
-    DEL_ID2,              /* Delete bonding of PeerID 2           */
-    DEL_ID3,              /* Delete bonding of PeerID 3           */
-    DEL_ID4,              /* Delete bonding of PeerID 4           */
-    ENT_DFU,              /* Start bootloader                     */
-    ENT_SLP,              /* Deep sleep mode                      */
+#endif
+    ADV_ID1, /* Start advertising to PeerID 1        */
+    ADV_ID2, /* Start advertising to PeerID 2        */
+    ADV_ID3, /* Start advertising to PeerID 3        */
+    ADV_ID4, /* Start advertising to PeerID 4        */
+    BATT_LV, /* Display battery level in milli volts */
+#if 0        /* used for slave */
+    DEL_ID0, /* Delete bonding of PeerID 0           */
+#endif
+    DEL_ID1, /* Delete bonding of PeerID 1           */
+    DEL_ID2, /* Delete bonding of PeerID 2           */
+    DEL_ID3, /* Delete bonding of PeerID 3           */
+    DEL_ID4, /* Delete bonding of PeerID 4           */
+    ENT_DFU, /* Start bootloader                     */
+    ENT_SLP, /* Deep sleep mode                      */
     /* custom */
     MS_LBTN,
     MS_RBTN,
@@ -218,9 +222,9 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_FN_MISC] = LAYOUT( \
 	// Left
-	AD_WO_L,	ADV_ID0,	ADV_ID1,	 ADV_ID2,	ADV_ID3,	ADV_ID4,				XXXXXXX,	XXXXXXX,	\
+	AD_WO_L,	ADV_ID1,	ADV_ID2,	 ADV_ID3,	ADV_ID4,	_______,				XXXXXXX,	XXXXXXX,	\
 	KC_F11,		KC_F1,		KC_F2,  	KC_F3,		KC_F4,		KC_F5,					KC_DRS2,	_______,	\
-	RGB_TOG,	DEL_ID0 ,	DEL_ID1,	DEL_ID2,	DEL_ID3,	DEL_ID4,				XXXXXXX,	KC_DRS1,	\
+	RGB_TOG,	DEL_ID1 ,	DEL_ID2,	DEL_ID3,	DEL_ID4,	_______,				XXXXXXX,	KC_DRS1,	\
 	RGB_BASE,	KC_LEFT,	KC_DOWN,	KC_UP,		KC_RIGHT,				KC_ENTER,	_______,	KC_DRS,		\
 	// Right
 	XXXXXXX,	XXXXXXX,				BLE_DIS,	BLE_EN,	USB_DIS,	USB_EN,	BATT_LV,	DELBNDS,	\
@@ -257,9 +261,11 @@ bool process_record_user_ble(uint16_t keycode, keyrecord_t *record) {
                 set_ble_enabled(false);
                 return false;
                 break;
+#if 0 /* used for slave */
             case ADV_ID0:
                 restart_advertising_id(0);
                 return false;
+#endif
             case ADV_ID1:
                 restart_advertising_id(1);
                 return false;
@@ -272,9 +278,11 @@ bool process_record_user_ble(uint16_t keycode, keyrecord_t *record) {
             case ADV_ID4:
                 restart_advertising_id(4);
                 return false;
+#if 0 /* used for slave */
             case DEL_ID0:
                 delete_bond_id(0);
                 return false;
+#endif
             case DEL_ID1:
                 delete_bond_id(1);
                 return false;
@@ -283,6 +291,9 @@ bool process_record_user_ble(uint16_t keycode, keyrecord_t *record) {
                 return false;
             case DEL_ID3:
                 delete_bond_id(3);
+                return false;
+            case DEL_ID4:
+                delete_bond_id(4);
                 return false;
             case BATT_LV:
                 sprintf(str, "%4dmV", get_vcc());
