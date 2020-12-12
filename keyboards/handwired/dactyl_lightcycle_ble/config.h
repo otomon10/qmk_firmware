@@ -58,7 +58,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGB_DI_PIN PIN1
 #define RGBLED_NUM 57
 #define RGBLED_SPLIT {29, 28}
-#define RGBLIGHT_LIMIT_VAL 255 // current limit
+#define RGBLIGHT_LIMIT_VAL 180
 
 #define TAPPING_TERM 200
 
