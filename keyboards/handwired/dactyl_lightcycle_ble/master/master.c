@@ -1,4 +1,5 @@
 #include "app_ble_func.h"
+#include "flash.h"
 #include "keymaps/default/ble_helper.h"
 #include "keymaps/default/paw3204.h"
 #include "matrix.h"
@@ -11,6 +12,7 @@ extern void matrix_scan_user_master(void);
 void matrix_init_user(void) {
     /* init trackball */
     init_paw3204();
+    flash_init();
 }
 
 void matrix_scan_user(void) {
@@ -30,8 +32,8 @@ void matrix_scan_user(void) {
     if (!init_ble_connect) {
         bool enable_usb = has_usb();
         if (!enable_usb) {
-            /* automatic connect ble peer id 0 */
-            ble_connect_id(0);
+            /* automatic connect last peer */
+            ble_connect_last_peer();
         }
         init_ble_connect = true;
     }
@@ -57,4 +59,6 @@ void matrix_scan_user(void) {
     }
 
     matrix_scan_user_master();
+
+    flash_update();
 }

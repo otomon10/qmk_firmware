@@ -18,10 +18,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "ble_helper.h"
 
 #include "app_ble_func.h"
+#include "flash.h"
 #include "keymap_def.h"
 
 pm_peer_id_t g_destination_peer_id;
-bool enable_animation;
+bool changed_peer;
+
+void ble_connect_last_peer() {
+    uint8_t *addr = FLASH_ADDR_BLE_LAST_CONNECTION_PEER_ID;
+    uint8_t peer_id = flash_read_byte(addr);
+
+    ble_connect_id(peer_id);
+}
 
 void ble_connect_id(uint8_t id) {
     uint32_t peer_cnt = get_peer_cnt();
@@ -35,7 +43,7 @@ void ble_connect_id(uint8_t id) {
         set_usb_enabled(false);
         set_ble_enabled(true);
 
-        enable_animation = true;
+        changed_peer = true;
     }
 }
 
@@ -46,20 +54,23 @@ bool is_ble_connected() {
 
 void process_ble_status_rgblight() {
     if (is_ble_connected()) {
-        if (enable_animation) {
-            rgblight_sethsv_noeeprom(HSV_OBLIVION_GREEN);
-            nrf_delay_ms(100);
+        if (changed_peer) {
+            /* blink LED peer id times */
+            int i;
             rgblight_sethsv_noeeprom(HSV_OFF);
             nrf_delay_ms(100);
-            rgblight_sethsv_noeeprom(HSV_OBLIVION_GREEN);
-            nrf_delay_ms(100);
-            rgblight_sethsv_noeeprom(HSV_OFF);
-            nrf_delay_ms(100);
-            rgblight_sethsv_noeeprom(HSV_OBLIVION_GREEN);
-            nrf_delay_ms(100);
-            rgblight_sethsv_noeeprom(HSV_OFF);
-            nrf_delay_ms(100);
-            enable_animation = false;
+            for (i = 0; i < g_destination_peer_id + 1; ++i) {
+                rgblight_sethsv_noeeprom(HSV_OBLIVION_GREEN);
+                nrf_delay_ms(100);
+                rgblight_sethsv_noeeprom(HSV_OFF);
+                nrf_delay_ms(100);
+            }
+            changed_peer = false;
+
+            uint8_t *addr = FLASH_ADDR_BLE_LAST_CONNECTION_PEER_ID;
+            uint8_t value = g_destination_peer_id;
+            flash_write_byte(addr, value);
+            dprintf("write last peer id");
         }
     }
 }

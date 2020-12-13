@@ -40,6 +40,7 @@ endif
 ifeq ($(PLATFORM),NRF_SDK)
 	TMK_COMMON_SRC += $(PLATFORM_COMMON_DIR)/printf.c
 	TMK_COMMON_SRC += $(PLATFORM_COMMON_DIR)/eeprom.c
+	TMK_COMMON_SRC += $(PLATFORM_COMMON_DIR)/flash.c
   ifeq ($(strip $(AUTO_SHIFT_ENABLE)), yes)
     TMK_COMMON_SRC += $(CHIBIOS)/os/various/syscalls.c
   endif
