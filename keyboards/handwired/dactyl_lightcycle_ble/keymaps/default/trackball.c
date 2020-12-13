@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* mouse define */
 #define MOVE_CNT_MAX 100
 #define MOVE_CNT_THRESH 10
-#define m 3.14159265
+#define PI 3.14159265
 
 uint8_t g_move_cnt;
 uint8_t g_stop_cnt;
