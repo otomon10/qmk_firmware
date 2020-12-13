@@ -17,6 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "trackball.h"
 
+#include <math.h>
+
 #include "app_ble_func.h"
 #include "keymap_def.h"
 #include "paw3204.h"
@@ -25,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* mouse define */
 #define MOVE_CNT_MAX 100
 #define MOVE_CNT_THRESH 10
+#define m 3.14159265
 
 uint8_t g_move_cnt;
 uint8_t g_stop_cnt;
@@ -40,14 +43,15 @@ void send_trackball_report(const int mouse_speed) {
     uint8_t stat;
     int8_t x, y;
     report_mouse_t mouse_rep;
+    double rad = 45 * (PI / 180);
     bool moved;
 
     read_paw3204(&stat, &x, &y);
     // dprintf("stat:%3d x:%3d y:%3d\n", stat, x, y);
 
     mouse_rep = pointing_device_get_report();
-    mouse_rep.x = -y >> mouse_speed;
-    mouse_rep.y = x >> mouse_speed;
+    mouse_rep.x = (int16_t)(-x * cos(rad) - y * sin(rad)) >> mouse_speed;
+    mouse_rep.y = (int16_t)(x * sin(rad) - y * cos(rad)) >> mouse_speed;
 
     /* Removed the initialization process of pointing_device_send(), */
     /* which should send the mouse report even when it is stopped. */
