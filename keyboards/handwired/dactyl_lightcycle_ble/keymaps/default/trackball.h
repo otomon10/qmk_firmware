@@ -10,3 +10,4 @@ void enable_trackball_force_move();
 void disable_trackball_force_move();
 void disable_trackball_force_move_with_delay();
 void trackball_continue_moving();
+void init_ttp223();

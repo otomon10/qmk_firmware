@@ -24,15 +24,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "paw3204.h"
 #include "pointing_device.h"
 
+/* nrf52 */
+#if defined PROTOCOL_NRF
+#include "nrf_gpio.h"
+#include "pin_assign.h"
+#define readPin(pin) nrf_gpio_pin_read(pin)
+#define setPinInputHigh(pin) nrf_gpio_cfg_input(pin, NRF_GPIO_PIN_PULLUP);
+#endif
+
 /* mouse define */
-#define MOVE_CNT_MAX 100
-#define MOVE_CNT_THRESH 10
+#define MOVE_CNT_MAX 10
+#define MOVE_CNT_THRESH 5
 #define PI 3.14159265
+
+/* touch sensor */
+#define TTP223_PIN D2
 
 uint8_t g_move_cnt;
 uint8_t g_stop_cnt;
 bool g_force_move;
 bool g_force_stop;
+
+void init_ttp223() { setPinInputHigh(TTP223_PIN); }
+
+bool is_touched() { return readPin(TTP223_PIN) == 1; }
 
 bool is_ready_trackball(void) {
     uint8_t pid = read_pid_paw3204();
@@ -80,6 +95,12 @@ void process_trackball(const int mouse_speed) {
 
     if (cnt++ % 50 == 0) {
         paw_ready = is_ready_trackball();
+    }
+
+    if (is_touched()) {
+        enable_trackball_force_move();
+    } else {
+        disable_trackball_force_move_with_delay();
     }
 
     if (paw_ready) {

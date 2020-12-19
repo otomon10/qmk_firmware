@@ -44,7 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MS_WH_THRESHOLD_DEFAULT 4
 #define MS_WH_SPEEDUP_INTERVAL 20
 
-#define BLE_SLEEP_TITME (3600 * 5) /* sleep in 5 min */
+#define BLE_SLEEP_TITME (3600 * 30) /* sleep in 30 min */
 
 /* Alt + ESC */
 #define AESC_ENABLE_TIME 30
@@ -302,11 +302,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case KC_WH_L:
         case KC_WH_R: {
             if (record->event.pressed) {
-                enable_trackball_force_move();
+                // enable_trackball_force_move();
             } else {
-                disable_trackball_force_move_with_delay();
+                // disable_trackball_force_move_with_delay();
             }
-            trackball_continue_moving();
+            // trackball_continue_moving();
             break;
         }
         case MS_LBTN:
@@ -317,13 +317,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             uint8_t btn = 1 << (keycode - MS_LBTN);
             if (record->event.pressed) {
                 report.buttons |= btn;
-                enable_trackball_force_move();
+                // enable_trackball_force_move();
             } else {
                 report.buttons &= ~btn;
-                disable_trackball_force_move_with_delay();
+                // disable_trackball_force_move_with_delay();
             }
             pointing_device_set_report(report);
-            trackball_continue_moving();
+            // trackball_continue_moving();
             return false;
         }
         case MS_SLOW: {
@@ -480,7 +480,11 @@ void keyboard_post_init_user(void) {
     // debug_mouse=true;
 }
 
+bool has_usb(void);
 void procees_sleep() {
+    if (has_usb()) {
+        return;
+    }
     if (sleep_cnt > BLE_SLEEP_TITME) {
         rgblight_sethsv_noeeprom(HSV_WHITE);
         nrf_delay_ms(100);

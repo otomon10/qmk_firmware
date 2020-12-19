@@ -2,6 +2,7 @@
 #include "flash.h"
 #include "keymaps/default/ble_helper.h"
 #include "keymaps/default/paw3204.h"
+#include "keymaps/default/trackball.h"
 #include "matrix.h"
 #include "rgblight.h"
 #include "wait.h"
@@ -12,6 +13,9 @@ extern void matrix_scan_user_master(void);
 void matrix_init_user(void) {
     /* init trackball */
     init_paw3204();
+    /* init touch sensor */
+    init_ttp223();
+    /* init fds */
     flash_init();
 }
 
@@ -51,8 +55,8 @@ void matrix_scan_user(void) {
                 set_usb_enabled(false);
                 set_ble_enabled(true);
 
-                /* automatic connect ble peer id 0 */
-                ble_connect_id(0);
+                /* automatic connect last peer */
+                ble_connect_last_peer();
             }
             enable_usb_prev = enable_usb;
         }

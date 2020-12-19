@@ -119,12 +119,10 @@ void sleep_mode_enter(void) {
   extern const uint32_t col_pins[THIS_DEVICE_COLS];
   int i;
 
-#if 0 /* since the slave needs to sleep, it also sleeps when connected to USB */
   if (nrfx_power_usbstatus_get() == NRFX_POWER_USB_STATE_CONNECTED ||
       nrfx_power_usbstatus_get() == NRFX_POWER_USB_STATE_READY) {
     return;
   }
-#endif
 
 #if DIODE_DIRECTION == ROW2COL
   for (i=0; i<THIS_DEVICE_COLS; i++) {
