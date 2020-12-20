@@ -29,8 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* communication options */
 #define BLE_NUS_MIN_INTERVAL 20
-#define BLE_NUS_MAX_INTERVAL 30
-#define BLE_HID_MAX_INTERVAL 30
+#define BLE_NUS_MAX_INTERVAL 60
+#define BLE_HID_MAX_INTERVAL 60
 #define BLE_HID_SLAVE_LATENCY 4
 
 /* key matrix size */
@@ -58,7 +58,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGB_DI_PIN PIN1
 #define RGBLED_NUM 57
 #define RGBLED_SPLIT {29, 28}
-#define RGBLIGHT_LIMIT_VAL 80
+#define RGBLIGHT_LIMIT_VAL 45
 
 #define TAPPING_TERM 200
 
