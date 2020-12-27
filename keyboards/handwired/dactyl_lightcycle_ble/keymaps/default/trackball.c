@@ -54,7 +54,7 @@ bool is_ready_trackball(void) {
     return pid == 0x30 ? true : false;
 }
 
-void send_trackball_report(const int mouse_speed) {
+void send_trackball_report(const double mouse_speed) {
     uint8_t stat;
     int8_t x, y;
     report_mouse_t mouse_rep;
@@ -65,8 +65,8 @@ void send_trackball_report(const int mouse_speed) {
     // dprintf("stat:%3d x:%3d y:%3d\n", stat, x, y);
 
     mouse_rep = pointing_device_get_report();
-    mouse_rep.x = (int16_t)(-x * cos(rad) - y * sin(rad)) >> mouse_speed;
-    mouse_rep.y = (int16_t)(x * sin(rad) - y * cos(rad)) >> mouse_speed;
+    mouse_rep.x = (int16_t)((-x * cos(rad) - y * sin(rad)) * mouse_speed);
+    mouse_rep.y = (int16_t)((x * sin(rad) - y * cos(rad)) * mouse_speed);
 
     /* Removed the initialization process of pointing_device_send(), */
     /* which should send the mouse report even when it is stopped. */
@@ -89,7 +89,7 @@ bool is_trackball_stop(void) {
     return g_stop_cnt == MOVE_CNT_MAX ? true : false;
 }
 
-void process_trackball(const int mouse_speed) {
+void process_trackball(const double mouse_speed) {
     static int cnt;
     static bool paw_ready;
 

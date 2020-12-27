@@ -39,8 +39,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* mouse define */
 #define MOUSE_CNT_MAX 100
 #define MOUSE_MOVE_CNT 10
-#define MOUSE_SPEED_SHIFT_DEFAULT 1
-#define MOUSE_SPEED_SHIFT_SLOW 2
+#define MOUSE_SPEED_SHIFT_DEFAULT 0.65
+#define MOUSE_SPEED_SHIFT_SLOW 0.3
 #define MS_WH_THRESHOLD_DEFAULT 4
 #define MS_WH_SPEEDUP_INTERVAL 20
 
@@ -142,7 +142,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 
 /* global variables */
 bool is_shitft_pressed;
-uint8_t mouse_speed = MOUSE_SPEED_SHIFT_DEFAULT;
+double mouse_speed = MOUSE_SPEED_SHIFT_DEFAULT;
 bool tg_aesc_enable;
 uint8_t tg_aesc_cnt;
 bool is_cspace_fn_active = false;
@@ -206,6 +206,19 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	_______,	KC_DMP2,				KC_F6,		KC_F7,		KC_F8,		KC_F9,		KC_F10,		KC_F12,		\
 	KC_DMP1,	XXXXXXX,				_______,	_______,	_______,	_______,	_______,	_______,	\
 	XXXXXXX,	_______,	_______,				KC_PSCR,	KC_INS,		_______,	AD_WO_L,	ENT_DFU 	\
+),
+
+[_MISC2] = LAYOUT( \
+	// Left
+	_______,	_______,	_______,	_______,	_______,	_______,				XXXXXXX,	XXXXXXX,	\
+	_______,	_______,	_______,	_______,	_______,	_______,				_______,	_______,	\
+	_______,	_______,	_______,	_______,	_______,	_______,				XXXXXXX,	_______,	\
+	_______,	_______,	_______,	_______,	_______,				_______,	_______,	_______,	\
+	// Right
+	XXXXXXX,	XXXXXXX,				_______,	_______,	_______,	_______,	_______,	_______,	\
+	_______,	_______,				_______,	_______,	_______,	_______,	_______,	_______,	\
+	_______,	XXXXXXX,				_______,	_______,	_______,	_______,	_______,	_______,	\
+	XXXXXXX,	_______,	_______,				_______,	_______,	_______,	_______,	_______		\
 ),
 };
 // clang-format on
@@ -328,9 +341,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         case MS_SLOW: {
             if (record->event.pressed) {
-                mouse_speed = MOUSE_SPEED_SHIFT_SLOW;
-            } else {
-                mouse_speed = MOUSE_SPEED_SHIFT_DEFAULT;
+                mouse_speed = mouse_speed == MOUSE_SPEED_SHIFT_DEFAULT
+                                  ? MOUSE_SPEED_SHIFT_SLOW
+                                  : MOUSE_SPEED_SHIFT_DEFAULT;
             }
             return false;
         }
@@ -435,8 +448,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     unregister_code(KC_LCTRL);
                     unregister_code(KC_MINS);
                 }
+                layer_off(_MISC2);
                 is_my_untag_ms_active = false;
-                disable_trackball_force_move();
             }
             return false;
         }
@@ -468,6 +481,9 @@ uint32_t layer_state_set_user(uint32_t state) {
             break;
         case _FN_MISC:
             rgblight_sethsv_noeeprom(HSV_OBLIVION_GREEN);
+            break;
+        case _MISC2:
+            rgblight_sethsv_noeeprom(HSV_OBLIVION_ORANGE);
             break;
     }
     return state;
@@ -529,8 +545,8 @@ void matrix_scan_user_master(void) {
     }
     if (is_my_untag_ms_active) {
         if (timer_elapsed(my_untag_ms_timer) > ENABLE_HOLD_TIME) {
+            layer_on(_MISC2);
             is_my_untag_ms_active = false;
-            enable_trackball_force_move();
         }
     }
 }

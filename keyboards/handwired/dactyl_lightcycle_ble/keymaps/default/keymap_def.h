@@ -1,6 +1,6 @@
 #pragma once
 
-enum layer_names { _BASE, _MOUSE, _NUMS, _FN_MISC };
+enum layer_names { _BASE, _MOUSE, _NUMS, _FN_MISC, _MISC2 };
 
 /* HSV color */
 #define HSV_OFF 0, 0, 0

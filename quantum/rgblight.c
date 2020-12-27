@@ -534,9 +534,9 @@ void rgblight_sethsv_at(uint16_t hue, uint8_t sat, uint8_t val, uint8_t index) {
 void rgblight_set(void) {
   if (rgblight_config.enable) {
     #ifdef RGBW
-      ws2812_setleds_rgbw(led, RGBLED_NUM);
+      ws2812_setleds_rgbw(led, RGBLED_ENABLE_NUM);
     #else
-      ws2812_setleds(led, RGBLED_NUM);
+      ws2812_setleds(led, RGBLED_ENABLE_NUM);
     #endif
   } else {
     for (uint8_t i = 0; i < RGBLED_NUM; i++) {

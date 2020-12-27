@@ -70,7 +70,6 @@ void process_ble_status_rgblight() {
             uint8_t *addr = FLASH_ADDR_BLE_LAST_CONNECTION_PEER_ID;
             uint8_t value = g_destination_peer_id;
             flash_write_byte(addr, value);
-            dprintf("write last peer id");
         }
     }
 }

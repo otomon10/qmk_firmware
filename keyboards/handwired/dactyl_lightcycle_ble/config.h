@@ -29,9 +29,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* communication options */
 #define BLE_NUS_MIN_INTERVAL 20
-#define BLE_NUS_MAX_INTERVAL 60
-#define BLE_HID_MAX_INTERVAL 60
-#define BLE_HID_SLAVE_LATENCY 4
+#define BLE_NUS_MAX_INTERVAL 30
+#define BLE_HID_MAX_INTERVAL 30
+#define BLE_HID_SLAVE_LATENCY 15
 
 /* key matrix size */
 #define MATRIX_ROWS 8   // Split setting Left:4 Right:4
@@ -56,8 +56,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* RGBLED */
 #define RGB_DI_PIN PIN1
-#define RGBLED_NUM 57
-#define RGBLED_SPLIT {29, 28}
+#define RGBLED_NUM 29
+#ifdef NRF_SEPARATE_KEYBOARD_MASTER // enable only thumb cluster
+#define RGBLED_ENABLE_NUM 5
+#else
+#define RGBLED_ENABLE_NUM 6
+#endif
 #define RGBLIGHT_LIMIT_VAL 45
 
 #define TAPPING_TERM 200
