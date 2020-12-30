@@ -189,10 +189,10 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	_______,	_______,	_______,	_______,	_______,	_______,				XXXXXXX,	_______,	\
 	_______,	_______,	_______,	_______,	_______,				_______,	_______,	_______,	\
 	// Right
-	XXXXXXX,	XXXXXXX,				_______,	MS_CBTN,	_______,	_______,	_______,	_______,	\
-	_______,	_______,				KC_WH_L,	KC_WH_U,	KC_WH_R,	_______,	_______,	_______,	\
-	_______,	XXXXXXX,				MS_LBTN,	KC_WH_D,	MS_RBTN,	MS_SLOW,	_______,	_______,	\
-	XXXXXXX,	_______,	_______,				_______,	_______,	_______,	_______,	_______		\
+	XXXXXXX,	XXXXXXX,				KC_WH_L,		MS_CBTN,	KC_WH_R,	_______,	_______,	_______,	\
+	_______,	_______,				C(S(KC_TAB)),	KC_WH_U,	C(KC_TAB),	_______,	_______,	_______,	\
+	_______,	XXXXXXX,				MS_LBTN,		KC_WH_D,	MS_RBTN,	MS_SLOW,	_______,	_______,	\
+	XXXXXXX,	_______,	_______,					_______,	_______,	_______,	_______,	_______		\
 ),
 
 [_FN_MISC] = LAYOUT( \
@@ -202,7 +202,7 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	RGB_TOG,	DEL_ID0 ,	DEL_ID1,	DEL_ID2,	DEL_ID3,	DEL_ID4,				XXXXXXX,	KC_DRS1,	\
 	RGB_BASE,	KC_LEFT,	KC_DOWN,	KC_UP,		KC_RIGHT,				KC_ENTER,	_______,	KC_DRS,		\
 	// Right
-	XXXXXXX,	XXXXXXX,				BLE_DIS,	BLE_EN,	USB_DIS,	USB_EN,	BATT_LV,	DELBNDS,	\
+	XXXXXXX,	XXXXXXX,				BLE_DIS,	BLE_EN,		USB_DIS,	USB_EN,		BATT_LV,	DELBNDS,	\
 	_______,	KC_DMP2,				KC_F6,		KC_F7,		KC_F8,		KC_F9,		KC_F10,		KC_F12,		\
 	KC_DMP1,	XXXXXXX,				_______,	_______,	_______,	_______,	_______,	_______,	\
 	XXXXXXX,	_______,	_______,				KC_PSCR,	KC_INS,		_______,	AD_WO_L,	ENT_DFU 	\
@@ -215,10 +215,10 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	_______,	_______,	_______,	_______,	_______,	_______,				XXXXXXX,	_______,	\
 	_______,	_______,	_______,	_______,	_______,				_______,	_______,	_______,	\
 	// Right
-	XXXXXXX,	XXXXXXX,				KC_NLCK,	KC_P7,	  KC_P8,	  KC_P9,  	KC_PMNS,	_______,	\
-	_______,	_______,				KC_PSLS,	KC_P4,	  KC_P5,	  KC_P6,  	KC_PPLS,	_______,	\
-	_______,	XXXXXXX,				KC_PAST,	KC_P1,	  KC_P2,	  KC_P3,  	KC_PENT,	_______,	\
-	XXXXXXX,	_______,	_______,				KC_P0,    KC_P0,	  KC_PDOT,	KC_PENT,	_______		\
+	XXXXXXX,	XXXXXXX,				KC_NLCK,	KC_P7,		KC_P8,		KC_P9,		KC_PMNS,	_______,	\
+	_______,	_______,				KC_PSLS,	KC_P4,		KC_P5,		KC_P6,		KC_PPLS,	_______,	\
+	_______,	XXXXXXX,				KC_PAST,	KC_P1,		KC_P2,		KC_P3,		KC_PENT,	_______,	\
+	XXXXXXX,	_______,	_______,				KC_P0,		KC_P0,		KC_PDOT,	KC_PENT,	_______		\
 ),
 };
 // clang-format on
