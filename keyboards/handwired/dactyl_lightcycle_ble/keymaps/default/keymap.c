@@ -17,10 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include QMK_KEYBOARD_H
+#include "adc.h"
 #include "app_ble_func.h"
 #include "ble_helper.h"
 #include "keymap_def.h"
 #include "pointing_device.h"
+#include "tps61291.h"
 #include "trackball.h"
 
 /* Aliases */
@@ -274,7 +276,12 @@ bool process_record_user_ble(uint16_t keycode, keyrecord_t *record) {
                 delete_bond_id(4);
                 return false;
             case BATT_LV:
+                /* get non-boost voltage */
+                disable_voltage_boost();
+                nrf_delay_ms(10);
+                adc_start();
                 sprintf(str, "%4dmV", get_vcc());
+                enable_voltage_boost();
                 send_string(str);
                 return false;
             case ENT_DFU:

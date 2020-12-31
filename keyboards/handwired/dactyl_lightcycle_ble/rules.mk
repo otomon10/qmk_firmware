@@ -16,7 +16,7 @@ TAP_DANCE_ENABLE = yes
 DYNAMIC_MACRO_ENABLE = yes
 POINTING_DEVICE_ENABLE = yes
 
-SRC += paw3204.c trackball.c
+SRC += paw3204.c trackball.c tps61291.c
 
 ## chip/board settings
 MCU_FAMILY = NRF52

@@ -1,6 +1,7 @@
 
 #include "app_ble_func.h"
 #include "bootloader.h"
+#include "keymaps/default/tps61291.h"
 #include "matrix.h"
 #include "nrf.h"
 #include "nrf_power.h"
@@ -8,6 +9,11 @@
 #include "wait.h"
 
 bool has_usb(void);
+
+void matrix_init_user(void) {
+    /* init voltage boost converter */
+    init_tps61291();
+}
 
 void matrix_scan_user() {
     static int cnt;

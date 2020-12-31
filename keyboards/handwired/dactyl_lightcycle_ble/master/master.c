@@ -2,6 +2,7 @@
 #include "flash.h"
 #include "keymaps/default/ble_helper.h"
 #include "keymaps/default/paw3204.h"
+#include "keymaps/default/tps61291.h"
 #include "keymaps/default/trackball.h"
 #include "matrix.h"
 #include "rgblight.h"
@@ -15,6 +16,8 @@ void matrix_init_user(void) {
     init_paw3204();
     /* init touch sensor */
     init_ttp223();
+    /* init voltage boost converter */
+    init_tps61291();
     /* init fds */
     flash_init();
 }
