@@ -488,3 +488,7 @@ void db_discovery_init(void) {
 uint32_t ble_nus_send_bytes_to_slave(uint8_t* buf, uint16_t len) {
     return ble_nus_c_string_send(&m_ble_nus_c, buf, len);
 }
+
+bool is_connected_slave() {
+    return m_conn_handle != BLE_CONN_HANDLE_INVALID;
+}

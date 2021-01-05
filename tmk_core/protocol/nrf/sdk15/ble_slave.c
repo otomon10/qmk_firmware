@@ -840,3 +840,7 @@ void main_task_start(uint8_t interval_ms) {
       APP_TIMER_TICKS(interval_ms), NULL);
   APP_ERROR_CHECK(err_code);
 }
+
+bool is_connected_master() {
+  return m_conn_handle != BLE_CONN_HANDLE_INVALID;
+}

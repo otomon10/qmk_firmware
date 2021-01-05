@@ -1,5 +1,6 @@
 
 #include "app_ble_func.h"
+#include "ble_slave.h"
 #include "bootloader.h"
 #include "keymaps/default/tps61291.h"
 #include "matrix.h"
@@ -19,13 +20,14 @@ void matrix_scan_user() {
     static int cnt;
     static bool init_rgblight = false;
 
-    /* init rgblight did not work well in keyboard_post_init_user(), so do it
-     * here */
-    if (!init_rgblight) {
-        rgblight_enable_noeeprom();
-        nrf_delay_ms(10);  // need this
-        rgblight_sethsv_noeeprom(0, 0, 255);
-        init_rgblight = true;
+    if (is_connected_master()) {
+        if (!init_rgblight) {
+            rgblight_enable_noeeprom();
+            nrf_delay_ms(10);  // need this
+            rgblight_sethsv_noeeprom(0, 0, 255);
+            nrf_delay_ms(300);
+            init_rgblight = true;
+        }
     }
 
     /* If the slave has a USB connection, it will be forced into dfu mode */

@@ -1,4 +1,5 @@
 #include "app_ble_func.h"
+#include "ble_central.h"
 #include "flash.h"
 #include "keymaps/default/ble_helper.h"
 #include "keymaps/default/paw3204.h"
@@ -36,13 +37,15 @@ void matrix_scan_user(void) {
         init_rgblight = true;
     }
 
-    if (!init_ble_connect) {
-        bool enable_usb = has_usb();
-        if (!enable_usb) {
-            /* automatic connect last peer */
-            ble_connect_last_peer();
+    if (is_connected_slave()) {
+        if (!init_ble_connect) {
+            bool enable_usb = has_usb();
+            if (!enable_usb) {
+                /* automatic connect last peer */
+                ble_connect_last_peer();
+            }
+            init_ble_connect = true;
         }
-        init_ble_connect = true;
     }
 
     /* automatic setting during USB insertion and removal */
@@ -59,7 +62,9 @@ void matrix_scan_user(void) {
                 set_ble_enabled(true);
 
                 /* automatic connect last peer */
-                ble_connect_last_peer();
+                if (is_connected_slave()) {
+                    ble_connect_last_peer();
+                }
             }
             enable_usb_prev = enable_usb;
         }
