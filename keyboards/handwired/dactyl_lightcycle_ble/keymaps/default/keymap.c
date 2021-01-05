@@ -484,13 +484,13 @@ uint32_t layer_state_set_user(uint32_t state) {
             rgblight_sethsv_noeeprom(HSV_OBLIVION_YELLOW);
             break;
         case _MOUSE:
-            rgblight_sethsv_noeeprom(HSV_OBLIVION_BLUE);
+            rgblight_sethsv_noeeprom(HSV_OBLIVION_ORANGE);
             break;
         case _FN_MISC:
             rgblight_sethsv_noeeprom(HSV_OBLIVION_GREEN);
             break;
         case _MISC2:
-            rgblight_sethsv_noeeprom(HSV_OBLIVION_ORANGE);
+            rgblight_sethsv_noeeprom(HSV_OBLIVION_BLUE);
             break;
     }
     return state;
