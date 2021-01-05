@@ -475,9 +475,9 @@ void rgblight_sethsv_eeprom_helper(uint16_t hue, uint8_t sat, uint8_t val, bool 
     rgblight_config.val = val;
     if (write_to_eeprom) {
       eeconfig_update_rgblight(rgblight_config.raw);
-      xprintf("rgblight set hsv [EEPROM]: %u,%u,%u\n", rgblight_config.hue, rgblight_config.sat, rgblight_config.val);
+      //xprintf("rgblight set hsv [EEPROM]: %u,%u,%u\n", rgblight_config.hue, rgblight_config.sat, rgblight_config.val);
     } else {
-      xprintf("rgblight set hsv [NOEEPROM]: %u,%u,%u\n", rgblight_config.hue, rgblight_config.sat, rgblight_config.val);
+      //xprintf("rgblight set hsv [NOEEPROM]: %u,%u,%u\n", rgblight_config.hue, rgblight_config.sat, rgblight_config.val);
     }
   }
 }
