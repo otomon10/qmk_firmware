@@ -25,7 +25,9 @@ void matrix_scan_user() {
             rgblight_enable_noeeprom();
             nrf_delay_ms(10);  // need this
             rgblight_sethsv_noeeprom(0, 0, 255);
-            nrf_delay_ms(300);
+            nrf_delay_ms(500);
+            rgblight_sethsv_noeeprom(0, 0, 0);
+            nrf_delay_ms(10);  // need this
             init_rgblight = true;
         }
     }
