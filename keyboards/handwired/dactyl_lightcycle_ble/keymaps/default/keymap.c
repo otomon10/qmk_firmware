@@ -86,7 +86,6 @@ enum custom_keycodes {
     MY_SPACE_FN,
     MY_UNTAG_MS,
     RGB_BASE,
-    MY_BSDEL,
     /* always put DYNAMIC_MACRO_RANGE last */
     DYNAMIC_MACRO_RANGE,
 };
@@ -161,15 +160,15 @@ int sleep_cnt = 0;
 const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_BASE] = LAYOUT( \
 	// Left
-	KC_ESC,				KC_Q,			KC_W,			KC_E,			KC_R,			KC_T,					XXXXXXX,		XXXXXXX,			\
-	KC_TAB,				KC_A,			KC_S,			KC_D,			KC_F,			KC_G,					MY_BSDEL,		MY_SPACE_FN,	\
-	KC_LSHIFT,		KC_Z,			KC_X,			KC_C,			KC_V,			KC_B,					XXXXXXX,		TD(CT_ALT),		\
-	RALT(KC_F7),	KC_LGUI,	KC_GRV,		MY_MOVL,	MY_MOVR,	KC_SPACE,		KC_LSHIFT,		TD(CT_CTRL),	\
+	KC_ESC,			KC_Q,		KC_W,		KC_E,		KC_R,		KC_T,					XXXXXXX,	XXXXXXX,		\
+	KC_TAB,			KC_A,		KC_S,		KC_D,		KC_F,		KC_G,					KC_BSPACE,	MY_SPACE_FN,	\
+	KC_LSHIFT,		KC_Z,		KC_X,		KC_C,		KC_V,		KC_B,					XXXXXXX,	TD(CT_ALT),		\
+	RALT(KC_F7),	KC_LGUI,	KC_GRV,		MY_MOVL,	MY_MOVR,				KC_SPACE,	KC_LSHIFT,	TD(CT_CTRL),	\
 	// Right
-	XXXXXXX,			XXXXXXX,									KC_Y,			KC_U,			KC_I,			KC_O,				KC_P,				KC_BSLASH,	\
-	MY_TAG,				MY_BSDEL,									KC_H,			KC_J,			KC_K,			KC_L,				KC_SCOLON,	KC_QUOTE,		\
-	MY_UNTAG_MS,	XXXXXXX,									KC_N,			KC_M,			KC_COMMA,	KC_DOT,			KC_SLASH,		KC_RSHIFT,	\
-	XXXXXXX,			MO(_NUMS),		KC_ENTER,		KC_LEFT,	KC_DOWN,	KC_UP,		KC_RIGHT,		RALT(KC_F8)		\
+	XXXXXXX,		XXXXXXX,				KC_Y,		KC_U,		KC_I,		KC_O,		KC_P,		KC_BSLASH,		\
+	MY_TAG,			KC_DELETE,				KC_H,		KC_J,		KC_K,		KC_L,		KC_SCOLON,	KC_QUOTE,		\
+	MY_UNTAG_MS,	XXXXXXX,				KC_N,		KC_M,		KC_COMMA,	KC_DOT,		KC_SLASH,	KC_RSHIFT,		\
+	XXXXXXX,		MO(_NUMS),	KC_ENTER,				KC_LEFT,	KC_DOWN,	KC_UP,		KC_RIGHT,	RALT(KC_F8)		\
 ),
 
 [_NUMS] = LAYOUT( \
@@ -402,24 +401,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             break;
-        }
-        case MY_BSDEL: {
-            if (record->event.pressed) {
-                if (is_shitft_pressed) {
-                    unregister_code(KC_LSHIFT);
-                    unregister_code(KC_RSHIFT);
-                    register_code(KC_DELETE);
-                    // keep hold for long press
-                    // register_code(KC_LSHIFT);
-                    // register_code(KC_RSHIFT);
-                } else {
-                    register_code(KC_BSPACE);
-                }
-            } else {
-                unregister_code(KC_DELETE);
-                unregister_code(KC_BSPACE);
-            }
-            return false;
         }
         case MY_TAG: {
             if (record->event.pressed) {
