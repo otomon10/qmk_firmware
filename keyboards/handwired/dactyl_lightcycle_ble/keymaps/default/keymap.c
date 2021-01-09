@@ -80,11 +80,13 @@ enum custom_keycodes {
     MS_RBTN,
     MS_CBTN,
     MS_SLOW,
-    TG_AESC,
+    MY_MOVR,
+    MY_MOVL,
     MY_TAG,
     MY_SPACE_FN,
     MY_UNTAG_MS,
     RGB_BASE,
+    MY_BSDEL,
     /* always put DYNAMIC_MACRO_RANGE last */
     DYNAMIC_MACRO_RANGE,
 };
@@ -146,7 +148,6 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 bool is_shitft_pressed;
 double mouse_speed = MOUSE_SPEED_SHIFT_DEFAULT;
 bool tg_aesc_enable;
-uint8_t tg_aesc_cnt;
 bool is_cspace_fn_active = false;
 uint16_t cspace_fn_timer = 0;
 bool is_my_tag_active = false;
@@ -160,15 +161,15 @@ int sleep_cnt = 0;
 const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_BASE] = LAYOUT( \
 	// Left
-	KC_ESC,			KC_Q,			KC_W,		KC_E,		KC_R,		KC_T,					XXXXXXX,		XXXXXXX,		\
-	KC_TAB,			KC_A,			KC_S,		KC_D,		KC_F,		KC_G,					KC_BSPACE,		MY_SPACE_FN,	\
-	KC_LSHIFT,		KC_Z,			KC_X,		KC_C,		KC_V,		KC_B,					XXXXXXX,		TD(CT_ALT),		\
-	RALT(KC_F7),	KC_LGUI,		KC_GRV,		C(KC_TAB),	TG_AESC,			KC_SPACE,		KC_LSHIFT,		TD(CT_CTRL),	\
+	KC_ESC,				KC_Q,			KC_W,			KC_E,			KC_R,			KC_T,					XXXXXXX,		XXXXXXX,			\
+	KC_TAB,				KC_A,			KC_S,			KC_D,			KC_F,			KC_G,					MY_BSDEL,		MY_SPACE_FN,	\
+	KC_LSHIFT,		KC_Z,			KC_X,			KC_C,			KC_V,			KC_B,					XXXXXXX,		TD(CT_ALT),		\
+	RALT(KC_F7),	KC_LGUI,	KC_GRV,		MY_MOVL,	MY_MOVR,	KC_SPACE,		KC_LSHIFT,		TD(CT_CTRL),	\
 	// Right
-	XXXXXXX,		XXXXXXX,					KC_Y,		KC_U,		KC_I,		KC_O,		KC_P,			KC_BSLASH,		\
-	MY_TAG,			KC_DELETE,					KC_H,		KC_J,		KC_K,		KC_L,		KC_SCOLON,		KC_QUOTE,		\
-	MY_UNTAG_MS,	XXXXXXX,					KC_N,		KC_M,		KC_COMMA,	KC_DOT,		KC_SLASH,		KC_RSHIFT,		\
-	XXXXXXX,		MO(_NUMS),		KC_ENTER,				KC_LEFT,	KC_DOWN,	KC_UP,		KC_RIGHT,		RALT(KC_F8)		\
+	XXXXXXX,			XXXXXXX,									KC_Y,			KC_U,			KC_I,			KC_O,				KC_P,				KC_BSLASH,	\
+	MY_TAG,				MY_BSDEL,									KC_H,			KC_J,			KC_K,			KC_L,				KC_SCOLON,	KC_QUOTE,		\
+	MY_UNTAG_MS,	XXXXXXX,									KC_N,			KC_M,			KC_COMMA,	KC_DOT,			KC_SLASH,		KC_RSHIFT,	\
+	XXXXXXX,			MO(_NUMS),		KC_ENTER,		KC_LEFT,	KC_DOWN,	KC_UP,		KC_RIGHT,		RALT(KC_F8)		\
 ),
 
 [_NUMS] = LAYOUT( \
@@ -201,7 +202,7 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	// Left
 	AD_WO_L,	ADV_ID0,	ADV_ID1,	 ADV_ID2,	ADV_ID3,	ADV_ID4,				XXXXXXX,	XXXXXXX,	\
 	KC_F11,		KC_F1,		KC_F2,  	KC_F3,		KC_F4,		KC_F5,					KC_DRS2,	_______,	\
-	RGB_TOG,	DEL_ID0 ,	DEL_ID1,	DEL_ID2,	DEL_ID3,	DEL_ID4,				XXXXXXX,	KC_DRS1,	\
+	RGB_TOG,	_______ ,	_______,	_______,	_______,	_______,				XXXXXXX,	KC_DRS1,	\
 	RGB_BASE,	KC_LEFT,	KC_DOWN,	KC_UP,		KC_RIGHT,				KC_ENTER,	_______,	KC_DRS,		\
 	// Right
 	XXXXXXX,	XXXXXXX,				BLE_DIS,	BLE_EN,		USB_DIS,	USB_EN,		BATT_LV,	DELBNDS,	\
@@ -354,19 +355,38 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
         }
-        case TG_AESC: {
+        case MY_MOVL:
+        case MY_MOVR: {
             if (record->event.pressed) {
-                if (!tg_aesc_enable) {
-                    register_code(KC_RALT);
+                if (is_shitft_pressed) {
+                    if (!tg_aesc_enable) {
+                        // release when the shift key is released
+                        register_code(KC_RALT);
+                    }
+
+                    // toggle window
+                    if (keycode == MY_MOVL) {
+                        unregister_code(KC_LSHIFT);
+                    }
                     register_code(KC_ESC);
+                    unregister_code(KC_ESC);
+                    if (keycode == MY_MOVL) {
+                        register_code(KC_LSHIFT);
+                    }
+
                     tg_aesc_enable = true;
-                    tg_aesc_cnt = 0;
                 } else {
-                    register_code(KC_ESC);
-                    tg_aesc_cnt = 0;
+                    if (keycode == MY_MOVL) {
+                        register_code(KC_LSHIFT);
+                    }
+                    register_code(KC_RCTRL);
+                    register_code(KC_TAB);
+                    if (keycode == MY_MOVL) {
+                        unregister_code(KC_LSHIFT);
+                    }
+                    unregister_code(KC_RCTRL);
+                    unregister_code(KC_TAB);
                 }
-            } else {
-                unregister_code(KC_ESC);
             }
             return false;
         }
@@ -376,10 +396,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 is_shitft_pressed = true;
             } else {
                 is_shitft_pressed = false;
+                if (tg_aesc_enable) {
+                    unregister_code(KC_RALT);
+                    tg_aesc_enable = false;
+                }
             }
             break;
         }
-        case KC_BSPACE: {
+        case MY_BSDEL: {
             if (record->event.pressed) {
                 if (is_shitft_pressed) {
                     unregister_code(KC_LSHIFT);
@@ -390,21 +414,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     // register_code(KC_RSHIFT);
                 } else {
                     register_code(KC_BSPACE);
-                }
-            } else {
-                unregister_code(KC_DELETE);
-                unregister_code(KC_BSPACE);
-            }
-            return false;
-        }
-        case KC_DELETE: {
-            if (record->event.pressed) {
-                if (is_shitft_pressed) {
-                    unregister_code(KC_LSHIFT);
-                    unregister_code(KC_RSHIFT);
-                    register_code(KC_BSPACE);
-                } else {
-                    register_code(KC_DELETE);
                 }
             } else {
                 unregister_code(KC_DELETE);
@@ -527,17 +536,6 @@ void matrix_scan_user_master(void) {
     process_ble_status_rgblight();
     procees_sleep();
 
-    // ALT + ESC
-    if (tg_aesc_enable) {
-        tg_aesc_cnt++;
-        if (tg_aesc_cnt > AESC_ENABLE_TIME) {
-            tg_aesc_enable = false;
-            unregister_code(KC_RALT);
-        }
-        if (is_shitft_pressed) {
-            tg_aesc_cnt = 0;
-        }
-    }
     if (is_cspace_fn_active) {
         if (timer_elapsed(cspace_fn_timer) > ENABLE_HOLD_TIME) {
             layer_on(_FN_MISC);
