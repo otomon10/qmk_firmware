@@ -493,11 +493,7 @@ void keyboard_post_init_user(void) {
     // debug_mouse=true;
 }
 
-bool has_usb(void);
 void procees_sleep() {
-    if (has_usb()) {
-        return;
-    }
     if (sleep_cnt > BLE_SLEEP_TITME) {
         rgblight_sethsv_noeeprom(HSV_WHITE);
         nrf_delay_ms(100);
