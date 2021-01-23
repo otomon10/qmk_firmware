@@ -54,32 +54,67 @@ bool is_ready_trackball(void) {
     return pid == 0x30 ? true : false;
 }
 
+void calculate_mouse_rep(const int8_t x, const int8_t y,
+                         report_mouse_t *mouse_rep, const double mouse_speed) {
+    const double rad = 45 * (PI / 180);
+    double tmp;
+
+    tmp = (-x * cos(rad) - y * sin(rad)) * mouse_speed;
+    if (tmp > 45 || tmp < -45) {
+        tmp = tmp * 4.0;
+    } else if (tmp > 25 || tmp < -25) {
+        tmp = tmp * 2.0;
+    }
+    if (tmp > 127) {
+        tmp = 127;
+    } else if (tmp < -128) {
+        tmp = -128;
+    }
+    mouse_rep->x = (int8_t)tmp;
+
+    tmp = (x * sin(rad) - y * cos(rad)) * mouse_speed;
+    if (tmp > 45 || tmp < -45) {
+        tmp = tmp * 4.0;
+    } else if (tmp > 25 || tmp < -25) {
+        tmp = tmp * 2.0;
+    }
+    if (tmp > 127) {
+        tmp = 127;
+    } else if (tmp < -128) {
+        tmp = -128;
+    }
+    mouse_rep->y = (int8_t)tmp;
+}
+
 void send_trackball_report(const double mouse_speed) {
     uint8_t stat;
     int8_t x, y;
     report_mouse_t mouse_rep;
-    double rad = 45 * (PI / 180);
     bool moved;
+    static bool send_stop = false;
 
     read_paw3204(&stat, &x, &y);
-    // dprintf("stat:%3d x:%3d y:%3d\n", stat, x, y);
-
     mouse_rep = pointing_device_get_report();
-    mouse_rep.x = (int16_t)((-x * cos(rad) - y * sin(rad)) * mouse_speed);
-    mouse_rep.y = (int16_t)((x * sin(rad) - y * cos(rad)) * mouse_speed);
 
-    /* Removed the initialization process of pointing_device_send(), */
-    /* which should send the mouse report even when it is stopped. */
-    pointing_device_set_report(mouse_rep);
+    calculate_mouse_rep(x, y, &mouse_rep, mouse_speed);
 
     moved = (stat & 0x80) ? true : false;
-
     if (moved) {
+#if 0
+        dprintf("stat:%3d x:%3d y:%3d mx:%3d my:%3d\n", stat, x, y, mouse_rep.x,
+                mouse_rep.y);
+#endif
+        pointing_device_set_report(mouse_rep);
+        send_stop = false;
         if (g_move_cnt < MOVE_CNT_MAX) g_move_cnt++;
         if (g_move_cnt > MOVE_CNT_THRESH) {
             g_stop_cnt = 0;
         }
     } else {
+        if (!send_stop) {
+            pointing_device_set_report(mouse_rep);
+            send_stop = true;
+        }
         g_move_cnt = 0;
         if (g_stop_cnt < MOVE_CNT_MAX) g_stop_cnt++;
     }

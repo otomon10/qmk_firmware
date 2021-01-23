@@ -41,7 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* mouse define */
 #define MOUSE_CNT_MAX 100
 #define MOUSE_MOVE_CNT 10
-#define MOUSE_SPEED_SHIFT_DEFAULT 0.65
+#define MOUSE_SPEED_SHIFT_DEFAULT 0.8
 #define MOUSE_SPEED_SHIFT_SLOW 0.3
 #define MS_WH_THRESHOLD_DEFAULT 4
 #define MS_WH_SPEEDUP_INTERVAL 20
