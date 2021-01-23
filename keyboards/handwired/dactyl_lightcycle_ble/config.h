@@ -29,9 +29,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* communication options */
 #define BLE_NUS_MIN_INTERVAL 30
-#define BLE_NUS_MAX_INTERVAL 50
-#define BLE_HID_MAX_INTERVAL 90
-#define BLE_HID_SLAVE_LATENCY 4
+#define BLE_NUS_MAX_INTERVAL 30
+#define BLE_HID_MAX_INTERVAL 30
+#define BLE_HID_SLAVE_LATENCY 7
 
 /* key matrix size */
 #define MATRIX_ROWS 8   // Split setting Left:4 Right:4
