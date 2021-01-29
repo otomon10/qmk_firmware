@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "pointing_device.h"
 
 static report_mouse_t mouseReport = {};
+static bool mouseReportUpdated = false;
 
 __attribute__ ((weak))
 void pointing_device_init(void){
@@ -50,7 +51,10 @@ void pointing_device_task(void){
     //mouseReport.h = 127 max -127 min (scroll horizontal)
     //mouseReport.buttons = 0x1F (decimal 31, binary 00011111) max (bitmask for mouse buttons 1-5, 1 is rightmost, 5 is leftmost) 0x00 min
     //send the report
-    pointing_device_send();
+    if (mouseReportUpdated) {
+      pointing_device_send();
+      mouseReportUpdated = false;
+    }
 }
 
 report_mouse_t pointing_device_get_report(void){
@@ -59,4 +63,5 @@ report_mouse_t pointing_device_get_report(void){
 
 void pointing_device_set_report(report_mouse_t newMouseReport){
 	mouseReport = newMouseReport;
+  mouseReportUpdated = true;
 }
