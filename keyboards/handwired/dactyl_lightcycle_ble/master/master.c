@@ -1,6 +1,7 @@
 #include "app_ble_func.h"
 #include "ble_central.h"
 #include "flash.h"
+#include "keymap_def.h"
 #include "keymaps/default/ble_helper.h"
 #include "keymaps/default/paw3204.h"
 #include "keymaps/default/tps61291.h"
@@ -37,6 +38,33 @@ void matrix_scan_user(void) {
         init_rgblight = true;
     }
 
+    /* prevent over discharge */
+    if (cnt % 1000 == 0) {
+        if (get_non_boost_voltage() < 1000) {
+            rgblight_sethsv_noeeprom(HSV_RED);
+            nrf_delay_ms(100);
+            rgblight_sethsv_noeeprom(HSV_OFF);
+            nrf_delay_ms(100);
+            rgblight_sethsv_noeeprom(HSV_RED);
+            nrf_delay_ms(100);
+            rgblight_sethsv_noeeprom(HSV_OFF);
+            nrf_delay_ms(100);
+            rgblight_sethsv_noeeprom(HSV_RED);
+            nrf_delay_ms(100);
+            rgblight_sethsv_noeeprom(HSV_OFF);
+            nrf_delay_ms(100);
+            rgblight_sethsv_noeeprom(HSV_RED);
+            nrf_delay_ms(100);
+            rgblight_sethsv_noeeprom(HSV_OFF);
+            nrf_delay_ms(100);
+            rgblight_sethsv_noeeprom(HSV_RED);
+            nrf_delay_ms(100);
+            rgblight_sethsv_noeeprom(HSV_OFF);
+            nrf_delay_ms(100);
+            sleep_mode_enter();
+        }
+    }
+
     if (is_connected_slave()) {
         if (!init_ble_connect) {
             bool enable_usb = has_usb();
@@ -49,7 +77,7 @@ void matrix_scan_user(void) {
     }
 
     /* automatic setting during USB insertion and removal */
-    if (cnt++ % 50 == 0) {
+    if (cnt % 50 == 0) {
         static bool enable_usb_prev;
         bool enable_usb = has_usb();
         if (enable_usb_prev != enable_usb) {
@@ -71,6 +99,7 @@ void matrix_scan_user(void) {
     }
 
     matrix_scan_user_master();
-
     flash_update();
+
+    cnt++;
 }
