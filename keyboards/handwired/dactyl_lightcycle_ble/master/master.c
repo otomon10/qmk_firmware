@@ -40,27 +40,28 @@ void matrix_scan_user(void) {
 
     /* prevent over discharge */
     if (cnt % 1000 == 0) {
-        if (get_non_boost_voltage() < 1000) {
-            rgblight_sethsv_noeeprom(HSV_RED);
-            nrf_delay_ms(100);
-            rgblight_sethsv_noeeprom(HSV_OFF);
-            nrf_delay_ms(100);
-            rgblight_sethsv_noeeprom(HSV_RED);
-            nrf_delay_ms(100);
-            rgblight_sethsv_noeeprom(HSV_OFF);
-            nrf_delay_ms(100);
-            rgblight_sethsv_noeeprom(HSV_RED);
-            nrf_delay_ms(100);
-            rgblight_sethsv_noeeprom(HSV_OFF);
-            nrf_delay_ms(100);
-            rgblight_sethsv_noeeprom(HSV_RED);
-            nrf_delay_ms(100);
-            rgblight_sethsv_noeeprom(HSV_OFF);
-            nrf_delay_ms(100);
-            rgblight_sethsv_noeeprom(HSV_RED);
-            nrf_delay_ms(100);
-            rgblight_sethsv_noeeprom(HSV_OFF);
-            nrf_delay_ms(100);
+        int i;
+        int voltage = get_non_boost_voltage();
+
+        /* led alert  */
+        if (voltage < 2200) {
+            for (i = 0; i < 10; ++i) {
+                rgblight_sethsv_noeeprom(HSV_RED);
+                nrf_delay_ms(100);
+                rgblight_sethsv_noeeprom(HSV_OFF);
+                nrf_delay_ms(100);
+            }
+        } else if (voltage < 2300) {
+            for (i = 0; i < 5; ++i) {
+                rgblight_sethsv_noeeprom(HSV_OBLIVION_YELLOW);
+                nrf_delay_ms(100);
+                rgblight_sethsv_noeeprom(HSV_OFF);
+                nrf_delay_ms(100);
+            }
+        }
+
+        /* force sleep */
+        if (voltage < 2000) {
             sleep_mode_enter();
         }
     }
