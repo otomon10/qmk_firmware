@@ -20,8 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keymap_def.h"
 
 #if defined PROTOCOL_NRF
+#include <stdint.h>
+
+#include "adc.h"
 #include "nrf_gpio.h"
 #include "pin_assign.h"
+#include "wait.h"
 #define setPinOutput(pin) nrf_gpio_cfg_output(pin)
 #define writePinLow(pin) nrf_gpio_pin_write(pin, 0)
 #define writePinHigh(pin) nrf_gpio_pin_write(pin, 1)
@@ -38,3 +42,13 @@ void init_tps61291() {
 void enable_voltage_boost() { writePinHigh(TPS61291_PIN); }
 
 void disable_voltage_boost() { writePinLow(TPS61291_PIN); }
+
+int get_non_boost_voltage() {
+    int vcc;
+    disable_voltage_boost();
+    nrf_delay_ms(10);
+    adc_start();
+    vcc = get_vcc();
+    enable_voltage_boost();
+    return vcc;
+}

@@ -226,7 +226,6 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // clang-format on
 
 bool process_record_user_ble(uint16_t keycode, keyrecord_t *record) {
-    char str[16];
     if (record->event.pressed) {
         switch (keycode) {
             case DELBNDS:
@@ -275,15 +274,12 @@ bool process_record_user_ble(uint16_t keycode, keyrecord_t *record) {
             case DEL_ID4:
                 delete_bond_id(4);
                 return false;
-            case BATT_LV:
-                /* get non-boost voltage */
-                disable_voltage_boost();
-                nrf_delay_ms(10);
-                adc_start();
-                sprintf(str, "%4dmV", get_vcc());
-                enable_voltage_boost();
+            case BATT_LV: {
+                char str[16];
+                sprintf(str, "%4dmV", get_non_boost_voltage());
                 send_string(str);
                 return false;
+            }
             case ENT_DFU:
                 rgblight_sethsv_noeeprom(302, 255, 255);
                 nrf_delay_ms(10);
