@@ -232,7 +232,7 @@ bool process_record_user_ble(uint16_t keycode, keyrecord_t *record) {
                 delete_bonds();
                 return false;
             case AD_WO_L:
-                restart_advertising_wo_whitelist();
+                ble_connect_advertising_wo_whitelist();
                 return false;
             case USB_EN:
                 set_usb_enabled(true);

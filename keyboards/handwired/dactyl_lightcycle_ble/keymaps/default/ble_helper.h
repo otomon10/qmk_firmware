@@ -6,5 +6,6 @@
 
 void ble_connect_last_peer();
 void ble_connect_id(uint8_t id);
+void ble_connect_advertising_wo_whitelist();
 bool is_ble_connected();
 void process_ble_status_rgblight();

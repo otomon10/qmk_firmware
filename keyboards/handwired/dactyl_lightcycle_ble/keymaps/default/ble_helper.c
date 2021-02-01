@@ -27,6 +27,7 @@ bool changed_peer;
 void ble_connect_last_peer() {
     uint8_t *addr = FLASH_ADDR_BLE_LAST_CONNECTION_PEER_ID;
     uint8_t peer_id = flash_read_byte(addr);
+    nrf_delay_ms(100);  // need this
 
     ble_connect_id(peer_id);
 }
@@ -35,6 +36,12 @@ void ble_connect_id(uint8_t id) {
     uint32_t peer_cnt = get_peer_cnt();
     pm_peer_id_t peer_id = get_peer_id();
     // dprintf("id = %d, peer_id = %d, peer_cnt = %d", id, peer_id, peer_cnt);
+
+    if (peer_cnt == 0) {
+        /* no device */
+        return;
+    }
+
     if (id < peer_cnt && id != peer_id) {
         restart_advertising_id(id);
         g_destination_peer_id = id;
@@ -45,6 +52,12 @@ void ble_connect_id(uint8_t id) {
 
         changed_peer = true;
     }
+}
+
+void ble_connect_advertising_wo_whitelist() {
+    g_destination_peer_id = get_peer_cnt();  // new device
+    restart_advertising_wo_whitelist();
+    changed_peer = true;
 }
 
 bool is_ble_connected() {
