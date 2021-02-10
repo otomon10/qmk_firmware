@@ -454,7 +454,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
     }
 
-    if (get_ble_enabled() && (!is_ble_connected())) {
+    if ((!get_usb_enabled()) && get_ble_enabled() && (!is_ble_connected())) {
         /* no ble connection */
         return false;
     }
@@ -514,7 +514,7 @@ void matrix_scan_user_master(void) {
     procees_sleep();
     process_ble_status_rgblight();
 
-    if (get_ble_enabled() && (!is_ble_connected())) {
+    if ((!get_usb_enabled()) && get_ble_enabled() && (!is_ble_connected())) {
         /* no ble connection */
         return;
     }
