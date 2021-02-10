@@ -454,6 +454,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
     }
 
+    if (get_ble_enabled() && (!is_ble_connected())) {
+        /* no ble connection */
+        return false;
+    }
+
     return ret;
 }
 
@@ -504,10 +509,17 @@ void procees_sleep() {
     sleep_cnt++;
 }
 
+bool has_usb(void);
 void matrix_scan_user_master(void) {
-    process_trackball(mouse_speed);
-    process_ble_status_rgblight();
     procees_sleep();
+    process_ble_status_rgblight();
+
+    if (get_ble_enabled() && (!is_ble_connected())) {
+        /* no ble connection */
+        return;
+    }
+
+    process_trackball(mouse_speed);
 
     if (is_cspace_fn_active) {
         if (timer_elapsed(cspace_fn_timer) > ENABLE_HOLD_TIME) {
