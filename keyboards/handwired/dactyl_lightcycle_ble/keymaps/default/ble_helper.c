@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "ble_helper.h"
 
 #include "app_ble_func.h"
+#include "ble_central.h"
 #include "flash.h"
 #include "keymap_def.h"
 
@@ -37,6 +38,11 @@ void ble_connect_id(uint8_t id) {
     pm_peer_id_t peer_id = get_peer_id();
     // dprintf("id = %d, peer_id = %d, peer_cnt = %d", id, peer_id, peer_cnt);
 
+    if (!is_connected_slave()) {
+        /* give priority to slave */
+        return;
+    }
+
     if (peer_cnt == 0) {
         /* no device */
         return;
@@ -55,6 +61,11 @@ void ble_connect_id(uint8_t id) {
 }
 
 void ble_connect_advertising_wo_whitelist() {
+    if (!is_connected_slave()) {
+        /* give priority to slave */
+        return;
+    }
+
     g_destination_peer_id = get_peer_cnt();  // new device
     restart_advertising_wo_whitelist();
     changed_peer = true;
