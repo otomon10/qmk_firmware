@@ -25,33 +25,39 @@ void matrix_init_user(void) {
 }
 
 void matrix_scan_user(void) {
-    static int cnt;
+    static int cnt = 0;
     static bool init_rgblight = false;
     static bool init_ble_connect = false;
+    static bool init_battery_check = false;
 
     /* init rgblight did not work well in keyboard_post_init_user(), so do it
      * here */
     if (!init_rgblight) {
-        rgblight_enable_noeeprom();
-        nrf_delay_ms(10);  // need this
-        rgblight_sethsv_noeeprom(0, 0, RGBLIGHT_LIMIT_VAL);
-        init_rgblight = true;
+        if (cnt == 0) {
+            rgblight_enable_noeeprom();
+            nrf_delay_ms(10);  // need this
+            rgblight_sethsv_noeeprom(HSV_WHITE);
+        } else if (cnt > 30) {
+            rgblight_sethsv_noeeprom(HSV_OFF);
+            nrf_delay_ms(10);
+            init_rgblight = true;
+        }
     }
 
     /* prevent over discharge */
-    if (cnt % 1000 == 0) {
-        int i;
+    if (!init_battery_check) {
+        int i = 0;
         int voltage = get_non_boost_voltage();
 
         /* led alert  */
-        if (voltage < 2200) {
+        if (voltage < 2250) {
             for (i = 0; i < 10; ++i) {
                 rgblight_sethsv_noeeprom(HSV_RED);
                 nrf_delay_ms(100);
                 rgblight_sethsv_noeeprom(HSV_OFF);
                 nrf_delay_ms(100);
             }
-        } else if (voltage < 2300) {
+        } else if (voltage < 2380) {
             for (i = 0; i < 5; ++i) {
                 rgblight_sethsv_noeeprom(HSV_OBLIVION_YELLOW);
                 nrf_delay_ms(100);
@@ -64,6 +70,7 @@ void matrix_scan_user(void) {
         if (voltage < 2000) {
             sleep_mode_enter();
         }
+        init_battery_check = true;
     }
 
     if (is_connected_slave()) {
