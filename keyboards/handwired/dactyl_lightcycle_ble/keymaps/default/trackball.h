@@ -10,3 +10,6 @@ void disable_trackball_force_move();
 void disable_trackball_force_move_with_delay();
 void trackball_continue_moving();
 void init_ttp223();
+void enable_touch_detect();
+void disable_touch_detect();
+void toggle_touch_detect();

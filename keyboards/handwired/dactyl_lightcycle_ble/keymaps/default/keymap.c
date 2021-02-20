@@ -167,7 +167,7 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	// Right
 	XXXXXXX,		XXXXXXX,				KC_Y,		KC_U,		KC_I,		KC_O,		KC_P,		KC_BSLASH,		\
 	MY_TAG,			KC_DELETE,				KC_H,		KC_J,		KC_K,		KC_L,		KC_SCOLON,	KC_QUOTE,		\
-	MY_UNTAG_MS,	XXXXXXX,				KC_N,		KC_M,		KC_COMMA,	KC_DOT,		KC_SLASH,	KC_RSHIFT,		\
+	MY_UNTAG_MS,	XXXXXXX,				KC_N,		KC_M,		KC_COMMA,	KC_DOT,		KC_SLASH,	KC_GRV,		\
 	XXXXXXX,		MO(_NUMS),	KC_ENTER,				KC_LEFT,	KC_DOWN,	KC_UP,		KC_RIGHT,	RALT(KC_F8)		\
 ),
 
@@ -441,7 +441,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     unregister_code(KC_LCTRL);
                     unregister_code(KC_MINS);
                 }
-                layer_off(_MISC2);
+                layer_off(_MOUSE);
                 is_my_untag_ms_active = false;
             }
             return false;
@@ -472,7 +472,7 @@ uint32_t layer_state_set_user(uint32_t state) {
             }
             break;
         case _NUMS:
-            rgblight_sethsv_noeeprom(HSV_OBLIVION_YELLOW);
+            rgblight_sethsv_noeeprom(HSV_GOLD);
             break;
         case _MOUSE:
             rgblight_sethsv_noeeprom(HSV_OBLIVION_ORANGE);
@@ -514,13 +514,6 @@ void matrix_scan_user_master(void) {
     procees_sleep();
     process_ble_status_rgblight();
 
-    if ((!get_usb_enabled()) && get_ble_enabled() && (!is_ble_connected())) {
-        /* no ble connection */
-        return;
-    }
-
-    process_trackball(mouse_speed);
-
     if (is_cspace_fn_active) {
         if (timer_elapsed(cspace_fn_timer) > ENABLE_HOLD_TIME) {
             layer_on(_FN_MISC);
@@ -535,8 +528,16 @@ void matrix_scan_user_master(void) {
     }
     if (is_my_untag_ms_active) {
         if (timer_elapsed(my_untag_ms_timer) > ENABLE_HOLD_TIME) {
-            layer_on(_MISC2);
+            layer_on(_MOUSE);
+            toggle_touch_detect();
             is_my_untag_ms_active = false;
         }
     }
+
+    if ((!get_usb_enabled()) && get_ble_enabled() && (!is_ble_connected())) {
+        /* no ble connection */
+        return;
+    }
+
+    process_trackball(mouse_speed);
 }

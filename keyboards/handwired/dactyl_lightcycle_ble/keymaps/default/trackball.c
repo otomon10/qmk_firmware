@@ -44,6 +44,7 @@ uint8_t g_move_cnt;
 uint8_t g_stop_cnt;
 bool g_force_move;
 bool g_force_stop;
+bool g_touch_detect = false;
 
 void init_ttp223() { setPinInputHigh(TTP223_PIN); }
 
@@ -132,10 +133,12 @@ void process_trackball(const double mouse_speed) {
         paw_ready = is_ready_trackball();
     }
 
-    if (is_touched()) {
-        enable_trackball_force_move();
-    } else {
-        disable_trackball_force_move_with_delay();
+    if (g_touch_detect) {
+        if (is_touched()) {
+            enable_trackball_force_move();
+        } else {
+            disable_trackball_force_move_with_delay();
+        }
     }
 
     if (paw_ready) {
@@ -179,3 +182,7 @@ void disable_trackball_force_move() {
 void disable_trackball_force_move_with_delay() { g_force_move = false; }
 
 void trackball_continue_moving() { g_stop_cnt = 0; }
+
+void enable_touch_detect() { g_touch_detect = true; }
+void disable_touch_detect() { g_touch_detect = false; }
+void toggle_touch_detect() { g_touch_detect = !g_touch_detect; }
