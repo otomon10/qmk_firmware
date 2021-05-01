@@ -56,6 +56,7 @@ rgblight_status_t rgblight_status;
 
 LED_TYPE led[RGBLED_NUM];
 bool rgblight_timer_enabled = false;
+uint16_t number_of_leds = RGBLED_ENABLE_NUM;
 
 void sethsv(uint16_t hue, uint8_t sat, uint8_t val, LED_TYPE *led1) {
   uint8_t r = 0, g = 0, b = 0, base, color;
@@ -506,7 +507,7 @@ void rgblight_setrgb(uint8_t r, uint8_t g, uint8_t b) {
   if (!rgblight_config.enable) { return; }
 
   for (uint8_t i = 0; i < RGBLED_NUM; i++) {
-    if (i < RGBLED_ENABLE_NUM) {
+    if (i < number_of_leds) {
       led[i].r = r;
       led[i].g = g;
       led[i].b = b;
@@ -839,9 +840,13 @@ void rgblight_clear_change_flags(void) {
 void rgblight_get_syncinfo(rgblight_syncinfo_t *syncinfo) {
   syncinfo->config = rgblight_config;
   syncinfo->status = rgblight_status;
+  syncinfo->enable_leds = number_of_leds;
 }
 
 void rgblight_update_sync(rgblight_syncinfo_t *syncinfo, bool write_to_eeprom) {
+  if (syncinfo->status.change_flags & RGBLIGHT_STATUS_CHANGE_ENABLE_LEDS) {
+    number_of_leds = syncinfo->enable_leds;
+  }
   if (syncinfo->status.change_flags & RGBLIGHT_STATUS_CHANGE_MODE) {
     if (syncinfo->config.enable) {
       rgblight_enable_noeeprom();
@@ -852,4 +857,9 @@ void rgblight_update_sync(rgblight_syncinfo_t *syncinfo, bool write_to_eeprom) {
   if (syncinfo->status.change_flags & RGBLIGHT_STATUS_CHANGE_HSVS) {
     rgblight_sethsv_noeeprom(syncinfo->config.hue, syncinfo->config.sat, syncinfo->config.val);
   }
+}
+
+void rgblight_set_number_of_leds(uint16_t num) {
+  number_of_leds = num;
+  rgblight_status.change_flags |= RGBLIGHT_STATUS_CHANGE_ENABLE_LEDS;
 }

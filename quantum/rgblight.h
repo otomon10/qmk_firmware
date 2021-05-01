@@ -174,6 +174,7 @@ void rgblight_effect_alternating(void);
 #define RGBLIGHT_STATUS_CHANGE_HSVS (1 << 1)
 #define RGBLIGHT_STATUS_CHANGE_TIMER (1 << 2)
 #define RGBLIGHT_STATUS_ANIMATION_TICK (1 << 3)
+#define RGBLIGHT_STATUS_CHANGE_ENABLE_LEDS (1 << 4)
 
 typedef struct _rgblight_status_t {
   uint8_t change_flags;
@@ -182,6 +183,7 @@ typedef struct _rgblight_status_t {
 typedef struct _rgblight_syncinfo_t {
   rgblight_config_t config;
   rgblight_status_t status;
+  uint16_t enable_leds;
 } rgblight_syncinfo_t;
 
 /* for split keyboard master side */
@@ -190,5 +192,7 @@ void rgblight_clear_change_flags(void);
 void rgblight_get_syncinfo(rgblight_syncinfo_t *syncinfo);
 /* for split keyboard slave side */
 void rgblight_update_sync(rgblight_syncinfo_t *syncinfo, bool write_to_eeprom);
+
+void rgblight_set_number_of_leds(uint16_t num);
 
 #endif

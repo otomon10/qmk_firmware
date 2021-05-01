@@ -86,6 +86,10 @@ enum custom_keycodes {
     MY_SPACE_FN,
     MY_UNTAG_MS,
     RGB_BASE,
+    RGB_INC,
+    RGB_DEC,
+    RGB_DEF,
+    RGB_MAX,
     /* always put DYNAMIC_MACRO_RANGE last */
     DYNAMIC_MACRO_RANGE,
 };
@@ -155,6 +159,7 @@ bool is_my_untag_ms_active = false;
 uint16_t my_untag_ms_timer = 0;
 bool enable_rgb_base = false;
 int sleep_cnt = 0;
+uint16_t enabled_leds = RGBLED_ENABLE_NUM;
 
 // clang-format off
 const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -201,8 +206,8 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	// Left
 	AD_WO_L,	ADV_ID0,	ADV_ID1,	 ADV_ID2,	ADV_ID3,	ADV_ID4,				XXXXXXX,	XXXXXXX,	\
 	KC_F11,		KC_F1,		KC_F2,  	KC_F3,		KC_F4,		KC_F5,					KC_DRS2,	_______,	\
-	RGB_TOG,	_______ ,	_______,	_______,	_______,	_______,				XXXXXXX,	KC_DRS1,	\
-	RGB_BASE,	KC_LEFT,	KC_DOWN,	KC_UP,		KC_RIGHT,				KC_ENTER,	_______,	KC_DRS,		\
+	RGB_TOG,  RGB_DEC,	RGB_INC,	RGB_DEF,	RGB_MAX,	RGB_BASE,				XXXXXXX,	KC_DRS1,	\
+	_______,	KC_LEFT,	KC_DOWN,	KC_UP,		KC_RIGHT,				KC_ENTER,	_______,	KC_DRS,		\
 	// Right
 	XXXXXXX,	XXXXXXX,				BLE_DIS,	BLE_EN,		USB_DIS,	USB_EN,		BATT_LV,	DELBNDS,	\
 	_______,	KC_DMP2,				KC_F6,		KC_F7,		KC_F8,		KC_F9,		KC_F10,		KC_F12,		\
@@ -451,6 +456,28 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 enable_rgb_base = enable_rgb_base ? false : true;
             }
             return false;
+        }
+        case RGB_INC:
+        case RGB_DEC:
+        case RGB_DEF:
+        case RGB_MAX: {
+            if (record->event.pressed) {
+                if (keycode == RGB_INC) {
+                    if (enabled_leds < RGBLED_NUM) enabled_leds++;
+                } else if (keycode == RGB_DEC) {
+                    if (enabled_leds > 0) enabled_leds--;
+                } else if (keycode == RGB_DEF) {
+                    enabled_leds = RGBLED_ENABLE_NUM;
+                } else if (keycode == RGB_MAX) {
+                    enabled_leds = RGBLED_NUM;
+                }
+                rgblight_set_number_of_leds(enabled_leds);
+                rgblight_toggle();
+                nrf_delay_ms(10);
+                rgblight_toggle();
+                nrf_delay_ms(10);
+                return false;
+            }
         }
     }
 
