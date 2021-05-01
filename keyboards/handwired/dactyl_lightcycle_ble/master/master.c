@@ -57,7 +57,7 @@ void matrix_scan_user(void) {
                 rgblight_sethsv_noeeprom(HSV_OFF);
                 nrf_delay_ms(100);
             }
-        } else if (voltage < 2380) {
+        } else if (voltage < 2390) {
             for (i = 0; i < 5; ++i) {
                 rgblight_sethsv_noeeprom(HSV_OBLIVION_YELLOW);
                 nrf_delay_ms(100);

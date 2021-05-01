@@ -24,6 +24,7 @@ void matrix_scan_user() {
     static int master_disconnect_cnt = 0;
     static bool init_rgblight = true;
     static bool init_connect_rgblight = true;
+    static bool init_battery_check = false;
 
     if (init_rgblight) {
         rgblight_enable_noeeprom();
@@ -34,6 +35,35 @@ void matrix_scan_user() {
     /* If the slave has a USB connection, it will be forced into dfu mode */
     if (cnt < 100 && has_usb()) {
         bootloader_jump();
+    }
+
+    /* prevent over discharge */
+    if (!init_battery_check) {
+        int i = 0;
+        int voltage = get_non_boost_voltage();
+
+        /* led alert  */
+        if (voltage < 2250) {
+            for (i = 0; i < 10; ++i) {
+                rgblight_sethsv_noeeprom(HSV_RED);
+                nrf_delay_ms(100);
+                rgblight_sethsv_noeeprom(HSV_OFF);
+                nrf_delay_ms(100);
+            }
+        } else if (voltage < 2390) {
+            for (i = 0; i < 5; ++i) {
+                rgblight_sethsv_noeeprom(HSV_OBLIVION_YELLOW);
+                nrf_delay_ms(100);
+                rgblight_sethsv_noeeprom(HSV_OFF);
+                nrf_delay_ms(100);
+            }
+        }
+
+        /* force sleep */
+        if (voltage < 2000) {
+            sleep_mode_enter();
+        }
+        init_battery_check = true;
     }
 
     if (is_connected_master()) {

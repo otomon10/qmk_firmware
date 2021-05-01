@@ -52,6 +52,8 @@ int main(void) {
 
   usbd_init();
 
+  adc_init();
+
   ble_stack_init();
   sd_power_dcdc_mode_set(NRF_POWER_DCDC_ENABLE);
   services_init();
