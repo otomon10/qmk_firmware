@@ -506,9 +506,15 @@ void rgblight_setrgb(uint8_t r, uint8_t g, uint8_t b) {
   if (!rgblight_config.enable) { return; }
 
   for (uint8_t i = 0; i < RGBLED_NUM; i++) {
-    led[i].r = r;
-    led[i].g = g;
-    led[i].b = b;
+    if (i < RGBLED_ENABLE_NUM) {
+      led[i].r = r;
+      led[i].g = g;
+      led[i].b = b;
+    } else {
+      led[i].r = 0;
+      led[i].g = 0;
+      led[i].b = 0;
+    }
   }
   rgblight_set();
 }
@@ -534,9 +540,9 @@ void rgblight_sethsv_at(uint16_t hue, uint8_t sat, uint8_t val, uint8_t index) {
 void rgblight_set(void) {
   if (rgblight_config.enable) {
     #ifdef RGBW
-      ws2812_setleds_rgbw(led, RGBLED_ENABLE_NUM);
+      ws2812_setleds_rgbw(led, RGBLED_NUM);
     #else
-      ws2812_setleds(led, RGBLED_ENABLE_NUM);
+      ws2812_setleds(led, RGBLED_NUM);
     #endif
   } else {
     for (uint8_t i = 0; i < RGBLED_NUM; i++) {
