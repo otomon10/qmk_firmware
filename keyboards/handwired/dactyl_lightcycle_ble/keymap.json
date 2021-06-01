@@ -1,0 +1,52 @@
+{
+    "keyboard": "handwired/dactyl_lightcycle_ble",
+    "keymap": "default",
+    "layout": "LAYOUT",
+    "layers": [
+        // BASE
+        [
+            //-----------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------
+            "KC_ESC",  "KC_Q",     "KC_W",    "KC_E",    "KC_R",    "KC_T",   "XXXXXXX",   "XXXXXXX",    "XXXXXXX", "XXXXXXX", "KC_Y",   "KC_U",    "KC_I",    "KC_O",   "KC_P",     "KC_BSLS",
+            "KC_TAB",  "KC_A",     "KC_S",    "KC_D",    "KC_F",    "KC_G",   "KC_BSPC",   "CK_LTFN",    "CK_TAG",  "KC_DEL",  "KC_H",   "KC_J",    "KC_K",    "KC_L",   "KC_SCLN",  "KC_QUOT",
+            "KC_LSFT", "KC_Z",     "KC_X",    "KC_C",    "KC_V",    "KC_B",   "XXXXXXX",   "KC_LALT",    "CK_UNTAG","XXXXXXX", "KC_N",   "KC_M",    "KC_COMM", "KC_DOT", "KC_SLSH",  "KC_GRV",
+            "KC_A",    "KC_GRV",   "KC_LGUI", "CK_MOVL", "CK_MOVR", "KC_SPC", "KC_LSFT",   "KC_LCTL",    "XXXXXXX", "MO(2)",   "KC_ENT", "KC_LEFT", "KC_DOWN", "KC_UP",  "KC_RGHT",  "KC_A"
+        ],
+        // MOUSE
+        [
+            //-----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------
+            "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "XXXXXXX",   "XXXXXXX",    "XXXXXXX", "XXXXXXX", "KC_WH_L", "CK_CBTN", "KC_WH_R", "KC_TRNS", "KC_TRNS", "KC_TRNS",
+            "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS",   "KC_TRNS",    "KC_TRNS", "KC_TRNS", "LCTL(LSFT(KC_TAB))", "KC_WH_U", "LCTL(KC_TAB)", "KC_TRNS", "KC_TRNS", "KC_TRNS",
+            "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "XXXXXXX",   "KC_TRNS",    "KC_TRNS", "XXXXXXX", "CK_LBTN", "KC_WH_D", "CK_RBTN", "KC_TRNS", "KC_TRNS", "KC_TRNS",
+            "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS",   "KC_TRNS",    "XXXXXXX", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS"
+        ],
+        // NUMS
+        [
+            //-----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------
+            "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "XXXXXXX",   "XXXXXXX",    "XXXXXXX", "XXXXXXX", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS",
+            "KC_TRNS", "KC_1",    "KC_2",    "KC_3",    "KC_4",    "KC_5",    "KC_TRNS",   "KC_TRNS",    "KC_TRNS", "KC_TRNS", "KC_6",    "KC_7",    "KC_8",    "KC_9",    "KC_0",    "KC_TRNS",
+            "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "XXXXXXX",   "KC_TRNS",    "KC_TRNS", "XXXXXXX", "KC_TRNS", "KC_MINS", "KC_EQL",  "KC_LBRC", "KC_RBRC", "KC_TRNS",
+            "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS",   "KC_TRNS",    "XXXXXXX", "KC_TRNS", "KC_TRNS", "KC_HOME", "KC_PGDN", "KC_PGUP", "KC_END",  "KC_TRNS"
+        ],
+        // FN_MISC
+        [
+            //-----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------
+            "AD_WO_L", "ADV_ID0", "ADV_ID1", "ADV_ID2", "ADV_ID3", "ADV_ID4", "XXXXXXX",   "XXXXXXX",    "XXXXXXX", "XXXXXXX", "BLE_DIS", "BLE_EN",  "USB_DIS", "USB_EN",  "BATT_LV", "DELBNDS",
+            "KC_F11",  "KC_F1",   "KC_F2",   "KC_F3",   "KC_F4",   "KC_F5",   "KC_DRS2",   "KC_TRNS",    "KC_TRNS", "KC_DMP2", "KC_F6",   "KC_F7",   "KC_F8",   "KC_F9",   "KC_F10",  "KC_F12",
+            "RGB_TOG", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "XXXXXXX",   "KC_DRS1",    "KC_DMP1", "XXXXXXX", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS",
+            "KC_TRNS", "KC_LEFT", "KC_DOWN", "KC_UP",   "KC_RIGHT","KC_ENTER","KC_TRNS",   "KC_DRS",     "XXXXXXX", "KC_TRNS", "KC_TRNS", "KC_PSCR", "KC_INS",  "KC_TRNS", "AD_WO_L", "ENT_DFU"
+        ]
+    ],
+    "author": "",
+    "notes": ""
+}
+
+/*
+        // layer name
+        [
+            //-----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------
+            "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "XXXXXXX",   "XXXXXXX",    "XXXXXXX", "XXXXXXX", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS",
+            "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS",   "KC_TRNS",    "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS",
+            "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "XXXXXXX",   "KC_TRNS",    "KC_TRNS", "XXXXXXX", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS",
+            "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS",   "KC_TRNS",    "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS"
+        ]
+*/
