@@ -286,11 +286,17 @@ MATRIX_LOOP_END:
     }
 }
 
+void busy_loop() {
+    volatile int loop=100000;
+    while(loop-- > 0){}
+}
+
 bmp_error_t nus_rcv_callback(const uint8_t* dat, uint32_t len)
 {
     if (len == sizeof(rgblight_syncinfo_t))
     {
         rgblight_update_sync((rgblight_syncinfo_t*)dat, false);
+        busy_loop();
     }
     return BMP_OK;
 }
