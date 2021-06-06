@@ -214,16 +214,8 @@ void matrix_init_user(void) {
 
 void matrix_scan_user(void) {
     static int  cnt                = 0;
-    static bool init_battery_check = false;
 
-    /* prevent over discharge */
-    if (!init_battery_check) {
-        /* force sleep */
-        if (get_non_boost_voltage() < 2000) {
-            BMPAPI->app.enter_sleep_mode();
-        }
-        init_battery_check = true;
-    }
+    battery_task();
 
     if (is_cspace_fn_active) {
         if (timer_elapsed(cspace_fn_timer) > ENABLE_HOLD_TIME) {

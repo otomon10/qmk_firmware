@@ -1,5 +1,6 @@
 /*
 Copyright 2019 Sekigon
+Copyright 2021 otomon10
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -571,6 +572,7 @@ void select_usb(void) {
 }
 
 extern bool via_keymap_update_flag;
+extern int non_boost_voltage;
 
 bool process_record_user_bmp(uint16_t keycode, keyrecord_t* record) {
     char str[16];
@@ -661,7 +663,7 @@ bool process_record_user_bmp(uint16_t keycode, keyrecord_t* record) {
                 BMPAPI->web_config.enter();
                 return false;
             case BATT_LV:
-                snprintf(str, sizeof(str), "%4dmV", BMPAPI->app.get_vcc_mv());
+                snprintf(str, sizeof(str), "%4dmV", non_boost_voltage);
                 send_string(str);
                 return false;
             case SAVE_EE:

@@ -16,27 +16,62 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "tps61291.h"
-#include "wait.h"
 #include "gpio.h"
-#include "adc.h"
+#include "timer.h"
+#include "bmp.h"
 
-/* voltage boost converter */
 #define TPS61291_PIN 5
+#define BATTERY_CHECK_INTERVAL 60000       // 1 min
+#define DISABLE_VOLTAGE_BOOST_DURATION 10  // 10 ms
+
+uint32_t battery_check_timer;
+int      non_boost_voltage = 0;
 
 void init_tps61291() {
     setPinOutput(TPS61291_PIN);
     enable_voltage_boost();
+
+    battery_check_timer = timer_read32() - BATTERY_CHECK_INTERVAL;
 }
 
 void enable_voltage_boost() { writePinHigh(TPS61291_PIN); }
 
 void disable_voltage_boost() { writePinLow(TPS61291_PIN); }
 
-int get_non_boost_voltage() {
-    int vcc;
-    disable_voltage_boost();
-    wait_ms(10);
-    vcc = BMPAPI->app.get_vcc_mv();
-    enable_voltage_boost();
-    return vcc;
+int get_non_boost_voltage() { return non_boost_voltage; }
+
+void update_non_boost_voltage() {
+    static bool     voltage_boost       = true;
+    static uint32_t voltage_boost_timer = 0;
+
+    if (timer_elapsed(battery_check_timer) >= BATTERY_CHECK_INTERVAL) {
+        if (voltage_boost) {
+            disable_voltage_boost();
+
+            voltage_boost_timer = timer_read32();
+            voltage_boost       = false;
+        } else {
+            if (timer_elapsed(voltage_boost_timer) >=
+                DISABLE_VOLTAGE_BOOST_DURATION) {
+                non_boost_voltage = BMPAPI->app.get_vcc_mv();
+
+                enable_voltage_boost();
+                voltage_boost       = true;
+                battery_check_timer = timer_read32();
+            }
+        }
+    }
+}
+
+void battery_task() {
+    if (is_usb_connected()) {
+        return;
+    }
+
+    update_non_boost_voltage();
+
+    /* prevent over discharge */
+    if (non_boost_voltage != 0 && non_boost_voltage < 2000) {
+        BMPAPI->app.enter_sleep_mode();
+    }
 }

@@ -56,14 +56,7 @@ void matrix_scan_user(void) {
         BMPAPI->bootloader_jump();
     }
 
-    /* prevent over discharge */
-    if (!init_battery_check) {
-        /* force sleep */
-        if (get_non_boost_voltage() < 2000) {
-            BMPAPI->app.enter_sleep_mode();
-        }
-        init_battery_check = true;
-    }
+    battery_task();
 
     cnt++;
 }
