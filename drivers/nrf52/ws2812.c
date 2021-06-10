@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "spi.h"
 #include "apidef.h"
 #include "gpio.h"
+#include "timer.h"
 
 typedef void (*spi_ws2812_t)(uint8_t *p_tx_buffer, size_t tx_length,
                              uint8_t cs_pin);
@@ -32,7 +33,14 @@ typedef void (*spi_ws2812_t)(uint8_t *p_tx_buffer, size_t tx_length,
 #    define WS2812_SCLK 6  // dummy pin
 #endif
 
+extern const uint8_t MAINTASK_INTERVAL;
+
 void ws2812_setleds(LED_TYPE *ledarray, uint16_t number_of_leds) {
+    /* not ready */
+    if (timer_read() < MAINTASK_INTERVAL) {
+        return;
+    }
+
     ws2812_setleds_pin(ledarray, number_of_leds,
                        BMPAPI->app.get_config()->led.pin);
 }
