@@ -1,5 +1,6 @@
 /*
 Copyright 2020 Sekigon
+Copyright 2021 otomon10
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -78,7 +79,7 @@ int bmp_indicator_set(BMP_INDICATOR_TYPE type, int32_t option) {
 }
 
 static int bmp_indicator_none(uint32_t time_ms, int32_t option) {
-    bmp_indicator_led_off();
+    //bmp_indicator_led_off();
     return 1;
 }
 
@@ -203,10 +204,12 @@ void bmp_indicator_init(uint8_t led_pin) {
 }
 
 void bmp_indicator_led_on() {
-    writePinHigh(indicator_led);
+    //writePinHigh(indicator_led);
+    rgblight_sethsv_noeeprom(HSV_BLUE);
 }
 
 void bmp_indicator_led_off() {
-    writePinLow(indicator_led);
+    //writePinLow(indicator_led);
+    rgblight_sethsv_noeeprom(HSV_OFF);
 }
 
