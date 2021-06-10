@@ -45,10 +45,7 @@
  */
 
 void ws2812_setleds     (LED_TYPE *ledarray, uint16_t number_of_leds);
-static inline void ws2812_setleds_pin (LED_TYPE *ledarray, uint16_t number_of_leds,uint8_t pinmask)
-{
-  BMPAPI->ws2812.setleds_pin((bmp_api_led_t*)ledarray, number_of_leds, BMPAPI->app.get_config()->led.pin); // ignore pinmask
-}
+void ws2812_setleds_pin (LED_TYPE *ledarray, uint16_t number_of_leds,uint8_t pinmask);
 void ws2812_setleds_rgbw(LED_TYPE *ledarray, uint16_t number_of_leds);
 
 
