@@ -33,7 +33,7 @@
             "AD_WO_L", "ADV_ID0", "ADV_ID1", "ADV_ID2", "ADV_ID3", "ADV_ID4", "XXXXXXX",   "XXXXXXX",    "XXXXXXX", "XXXXXXX", "BLE_DIS", "BLE_EN",  "USB_DIS", "USB_EN",  "BATT_LV", "DELBNDS",
             "KC_F11",  "KC_F1",   "KC_F2",   "KC_F3",   "KC_F4",   "KC_F5",   "KC_DRS2",   "KC_TRNS",    "KC_TRNS", "KC_DMP2", "KC_F6",   "KC_F7",   "KC_F8",   "KC_F9",   "KC_F10",  "KC_F12",
             "RGB_TOG", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "XXXXXXX",   "KC_DRS1",    "KC_DMP1", "XXXXXXX", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS", "KC_TRNS",
-            "KC_TRNS", "KC_LEFT", "KC_DOWN", "KC_UP",   "KC_RIGHT","KC_ENTER","KC_TRNS",   "KC_DRS",     "XXXXXXX", "KC_TRNS", "KC_TRNS", "KC_PSCR", "KC_INS",  "KC_TRNS", "AD_WO_L", "ENT_DFU"
+            "KC_TRNS", "KC_LEFT", "KC_DOWN", "KC_UP",   "KC_RGHT", "KC_ENT",  "KC_TRNS",   "KC_DRS",     "XXXXXXX", "KC_TRNS", "KC_TRNS", "KC_PSCR", "KC_INS",  "KC_TRNS", "AD_WO_L", "ENT_DFU"
         ]
     ],
     "author": "",
