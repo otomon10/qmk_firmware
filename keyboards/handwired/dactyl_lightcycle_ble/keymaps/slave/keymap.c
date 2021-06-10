@@ -48,11 +48,23 @@ void matrix_init_user(void) {
 }
 
 void matrix_scan_user(void) {
-    static int  cnt                = 0;
+    static int  cnt           = 0;
+    static bool init_rgblight = false;
 
     /* If the slave has a USB connection, it will be forced into dfu mode */
     if (cnt < 100 && is_usb_connected()) {
         BMPAPI->bootloader_jump();
+    }
+
+    /* init rgblight did not work well in keyboard_post_init_user(), so do it
+     * here */
+    if (!init_rgblight) {
+        if (cnt == 0) {
+            rgblight_sethsv_noeeprom(HSV_WHITE);
+        } else if (cnt > 30) {
+            rgblight_sethsv_noeeprom(HSV_OFF);
+            init_rgblight = true;
+        }
     }
 
     battery_task();
