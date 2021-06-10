@@ -19,6 +19,7 @@
 #include "bmp_custom_keycode.h"
 #include "keycode_str_converter.h"
 #include "./keymaps/tps61291.h"
+#include "./keymaps/common.h"
 
 // Defines the keycodes used by our macros in process_record_user
 enum custom_keycodes {
@@ -49,25 +50,14 @@ void matrix_init_user(void) {
 
 void matrix_scan_user(void) {
     static int  cnt           = 0;
-    static bool init_rgblight = false;
 
     /* If the slave has a USB connection, it will be forced into dfu mode */
     if (cnt < 100 && is_usb_connected()) {
         BMPAPI->bootloader_jump();
     }
 
-    /* init rgblight did not work well in keyboard_post_init_user(), so do it
-     * here */
-    if (!init_rgblight) {
-        if (cnt == 0) {
-            rgblight_sethsv_noeeprom(HSV_WHITE);
-        } else if (cnt > 30) {
-            rgblight_sethsv_noeeprom(HSV_OFF);
-            init_rgblight = true;
-        }
-    }
-
     battery_task();
+    init_led_task(cnt);
 
     cnt++;
 }

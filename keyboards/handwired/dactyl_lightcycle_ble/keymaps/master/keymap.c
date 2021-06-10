@@ -22,6 +22,7 @@
 #include "paw3204.h"
 #include "trackball.h"
 #include "./keymaps/tps61291.h"
+#include "./keymaps/common.h"
 
 #define ENABLE_HOLD_TIME 200
 #define MOUSE_SPEED_SHIFT_DEFAULT 0.8
@@ -214,20 +215,9 @@ void matrix_init_user(void) {
 
 void matrix_scan_user(void) {
     static int  cnt           = 0;
-    static bool init_rgblight = false;
-
-    /* init rgblight did not work well in keyboard_post_init_user(), so do it
-     * here */
-    if (!init_rgblight) {
-        if (cnt == 0) {
-            rgblight_sethsv_noeeprom(HSV_WHITE);
-        } else if (cnt > 30) {
-            rgblight_sethsv_noeeprom(HSV_OFF);
-            init_rgblight = true;
-        }
-    }
 
     battery_task();
+    init_led_task(cnt);
 
     if (is_cspace_fn_active) {
         if (timer_elapsed(cspace_fn_timer) > ENABLE_HOLD_TIME) {
