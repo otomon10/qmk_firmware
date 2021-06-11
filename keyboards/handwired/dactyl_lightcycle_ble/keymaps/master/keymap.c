@@ -38,6 +38,11 @@ enum custom_keycodes {
     CK_LBTN,
     CK_RBTN,
     CK_CBTN,
+    CK_DRS1,
+    CK_DRS2,
+    CK_DRS,
+    CK_DMP1,
+    CK_DMP2,
     CK_END,
 };
 
@@ -46,7 +51,7 @@ const key_string_map_t custom_keys_user = {
     .end_kc   = CK_END,
     .key_strings =
         "CK_START\0CK_LTFN\0CK_MOVL\0CK_MOVR\0CK_TAG\0CK_UNTAG\0CK_LBTN\0CK_"
-        "RBTN\0CK_CBTN\0CK_END\0"};
+        "RBTN\0CK_CBTN\0CK_DRS1\0CK_DRS2\0CK_DRS\0CK_DMP1\0CK_DMP2\0CK_END\0"};
 
 const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {{{KC_NO}}};
 
@@ -179,6 +184,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             pointing_device_set_report(report);
             return false;
         }
+        case CK_DRS1:
+        case CK_DRS2:
+        case CK_DRS:
+        case CK_DMP1:
+        case CK_DMP2: {
+            uint16_t keycode_dyn = DYN_REC_START1 + (keycode - CK_DRS1);
+            if (!process_dynamic_macro(keycode_dyn, record)) {
+                return false;
+            }
+        }
         default:
             break;
     }
@@ -214,7 +229,7 @@ void matrix_init_user(void) {
 }
 
 void matrix_scan_user(void) {
-    static int  cnt           = 0;
+    static int cnt = 0;
 
     battery_task();
     init_led_task(cnt);
