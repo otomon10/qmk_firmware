@@ -95,20 +95,20 @@ static int bmp_indicator_turnoff(uint32_t time_ms, int32_t option) {
 
 static int bmp_indicator_battery(uint32_t time_ms, int32_t option) {
     if (time_ms > 0 && time_ms <100) {
-        bmp_indicator_led_on();
+        //bmp_indicator_led_on();
     }
     else if (time_ms > 300 && time_ms <400 && option > 1) {
-        bmp_indicator_led_on();
+        //bmp_indicator_led_on();
     }
     else if (time_ms > 600 && time_ms <700 && option > 2) {
-        bmp_indicator_led_on();
+        //bmp_indicator_led_on();
     }
     else if (time_ms > 3000) {
-        bmp_indicator_led_off();
+        //bmp_indicator_led_off();
         return 1;
     }
     else {
-        bmp_indicator_led_off();
+        //bmp_indicator_led_off();
     }
 
     return 0;
