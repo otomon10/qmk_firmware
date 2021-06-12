@@ -43,3 +43,5 @@ void init_led_task(int count) {
         }
     }
 }
+
+void bmp_before_sleep() { rgblight_sethsv_noeeprom(HSV_OFF); }
